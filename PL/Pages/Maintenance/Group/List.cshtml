@@ -1,0 +1,48 @@
+﻿@page
+@model PL.Pages.Maintenance.Group.ListModel
+@{
+    Layout = "_Maintenance";
+    ViewData["PageTitle"] = "All Groups";
+}
+
+<div class="container cp-b px-4 py-5 my-5">
+    <div class="row">
+        <div class="col"><h3>Group</h3></div>
+        <div class="col"><h3>Attached To Category</h3></div>
+        <div class="col"><h3>Created At</h3></div>
+        <div class="col"><h3>Updated At</h3></div>
+        <div class="col"><h3>To Do</h3></div>
+    </div>
+    <hr />
+
+    @if (Model.Groups.Count != 0)
+    {
+        @foreach (var group in Model.Groups)
+        {
+            <div class="row">
+                <div class="col"><p>@group.Group</p></div>
+                <div class="col"><p>@group.AttachedToCategory</p></div>
+                <div class="col"><p>@group.CreatedAt</p></div>
+                <div class="col"><p>@group.ModifiedAt</p></div>
+                <div class="col">
+                    <a class="link" href="/maintenance/group?group=@group.Key">Edit</a>
+                    <a class="link" href="/maintenance/group?group=@group.Key&handler=Drop">Remove</a>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <div class="row my-1">
+            <div class="col ta-center">
+                <p>Group list is empty. Use button below to add first.</p>
+            </div>
+        </div>
+    }
+
+    <div class="row">
+        <div class="col ta-center">
+            <a class="button cp-b-bg my-2" href="/maintenance/group">Create New</a>
+        </div>
+    </div>
+</div>

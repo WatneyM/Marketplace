@@ -1,0 +1,76 @@
+﻿@page "{group?}"
+@model PL.Pages.Maintenance.Group.EditorModel
+@{
+    Layout = "_Maintenance";
+    ViewData["PageTitle"] = "Group Editor";
+
+    bool updateEntity = Request.Query.ContainsKey("group") && Request.Query["group"] != "";
+}
+
+@using DSL.Adapters.Category
+
+<div class="container cp-b px-4 py-5 my-5">
+    <div class="row">
+        <div class="col ta-center">
+            <form method="post" autocomplete="off" spellcheck="false" id="group-editor">
+                <div class="form-record">
+                    <input type="password" class="secret" value="@Model.Group.Key"
+                           asp-for="Group.Key" readonly tabindex="-1" />
+                    <input type="password" class="secret" id="group-secret"
+                           asp-for="Group.AttachedToCategory" readonly tabindex="-1" />
+                </div>
+
+                <div class="form-record">
+                    <label class="label" for="group-name">Group</label>
+                    <input type="text" class="input" id="group-name" placeholder=" "
+                           asp-for="Group.Group" />
+
+                    <span asp-validation-for="Group.Group"></span>
+                </div>
+
+                <div class="row form-record">
+                    <div class="col p-rel">
+                        <label class="label" for="group-category">Category</label>
+                        <input type="text" class="input" id="group-category"
+                               placeholder=" " readonly tabindex="-1" />
+
+                        <span asp-validation-for="Group.AttachedToCategory"></span>
+                    </div>
+                    <div class="col-3 mx-3 menu" data-component="menu-single"
+                         data-rel-text="#group-category" data-rel-secret="#group-secret">
+                        <button type="button" class="button cp-b-bg menu-header">
+                            <p class="d-inline">Select category</p>
+                            <i class="fa fa-angle-down fa-sm"></i>
+                        </button>
+                        <div class="menu-list">
+                            @foreach (CategoryRWAdapter category in Model.Categories)
+                            {
+                                if (Model.Group.AttachedToCategory is not null
+                                && Model.Group.AttachedToCategory == category.Key)
+                                {
+                                    <button type="button" class="menu-node" data-node="ss"
+                                            data-val="@category.Key" disabled>@category.Category</button>
+                                }
+                                else
+                                {
+                                    <button type="button" class="menu-node" data-node="ss"
+                                            data-val="@category.Key">@category.Category</button>
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+            </form>
+            @if (updateEntity)
+            {
+                <button class="button cp-b-bg" form="group-editor"
+                        asp-page-handler="Push">Update</button>
+            }
+            else
+            {
+                <button class="button cp-b-bg" form="group-editor"
+                        asp-page-handler="Push">Create</button>
+            }
+        </div>
+    </div>
+</div>

@@ -1,0 +1,77 @@
+﻿@page "{category?}"
+@model PL.Pages.Maintenance.Category.EditorModel
+@{
+    Layout = "_Maintenance";
+    ViewData["PageTitle"] = "Category Editor";
+
+    bool updateEntity = Request.Query.ContainsKey("category") && Request.Query["category"] != "";
+}
+
+@using DSL.Adapters.Category
+
+<div class="container cp-b px-4 py-5 my-5">
+    <div class="row">
+        <div class="col ta-center">
+            <form method="post" autocomplete="off" spellcheck="false" id="ctg-editor">
+                <div class="form-record">
+                    <input type="password" class="secret" value="@Model.Category.Key"
+                           asp-for="Category.Key" readonly tabindex="-1" />
+                    <input type="password" class="secret" id="ctg-secret"
+                           asp-for="Category.AttachedToCategory" readonly tabindex="-1" />
+                </div>
+
+                <div class="form-record">
+                    <label class="label" for="ctg-name">Category</label>
+                    <input type="text" class="input" id="ctg-name" placeholder=" "
+                           asp-for="Category.Category" />
+
+                    <span asp-validation-for="Category.Category"></span>
+                </div>
+
+                <div class="row form-record">
+                    <div class="col">
+                        <label class="label" for="ctg-ancestor">Ancestor</label>
+                        <input type="text" class="input" id="ctg-ancestor"
+                               placeholder=" " readonly tabindex="-1" />
+                    </div>
+                    <div class="col-3 mx-3 menu" data-component="menu-single"
+                         data-rel-text="#ctg-ancestor" data-rel-secret="#ctg-secret">
+                        <button type="button" class="button cp-b-bg menu-header">
+                            <p class="d-inline">Select category</p>
+                            <i class="fa fa-angle-down fa-sm"></i>
+                        </button>
+                        <div class="menu-list">
+                            @foreach (CategoryRWAdapter category in Model.Categories)
+                            {
+                                if (Model.Category.AttachedToCategory is not null
+                                && Model.Category.AttachedToCategory == category.Key)
+                                {
+                                    <button type="button" class="menu-node" data-node="ss"
+                                            data-val="@category.Key" disabled>@category.Category</button>
+                                }
+                                else
+                                {
+                                    <button type="button" class="menu-node" data-node="ss"
+                                            data-val="@category.Key">@category.Category</button>
+                                }
+                            }
+                            <hr />
+                            <button type="button" class="menu-node menu-reset"
+                                    data-node="cs">CLEAR</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            @if (updateEntity)
+            {
+                <button class="button cp-b-bg" form="ctg-editor"
+                        asp-page-handler="Push">Update</button>
+            }
+            else
+            {
+                <button class="button cp-b-bg" form="ctg-editor"
+                        asp-page-handler="Push">Create</button>
+            }
+        </div>
+    </div>
+</div>

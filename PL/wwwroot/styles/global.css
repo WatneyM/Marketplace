@@ -1,0 +1,92 @@
+﻿:root {
+    --clr-black: #000000;
+    --clr-grey: #e8e8e8;
+    --clr-highlight-grey: #cfcfcf;
+    --clr-blue: #148888;
+    --clr-red: #e12020;
+
+    --cp-b-width: .2rem;
+    --cp-b-angle: 1rem;
+    --cp-b-correction: .05rem;
+}
+
+html {
+    font-size: 62.5%;
+}
+
+body {
+    width: 75%;
+    height: 100vh;
+    margin: 0 auto;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    cursor: default;
+}
+
+a {
+    display: inline-block;
+    position: relative;
+    color: var(--clr-text-paragraph);
+    text-decoration: none;
+    outline: none;
+}
+
+hr {
+    border: .1rem solid var(--clr-blue);
+}
+
+.button {
+    background: transparent;
+    border: none;
+    outline: none;
+    display: inline-block;
+    margin: 0 auto;
+    padding: .75rem 2rem;
+    position: relative;
+    z-index: 1;
+}
+
+.link::after {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    content: "";
+    height: .2rem;
+    transform: scaleX(0);
+    transform-origin: bottom right;
+    transition: transform .25s ease-in-out;
+    background-color: var(--clr-blue);
+}
+
+.link:hover::after,
+.link:focus-within::after {
+    transform-origin: bottom left;
+    transform: scaleX(1);
+}
+
+.field-validation-error {
+    position: absolute;
+    bottom: -.85rem;
+    right: 2rem;
+    z-index: 2;
+    background-color: white;
+    padding: 0 .5rem;
+    border-radius: .5rem;
+    font: 350 1.5rem JS-I;
+    color: var(--clr-red);
+}
+
+.hierarchy-col {
+    border-left: .2rem solid var(--clr-blue);
+    padding-left: 1rem;
+    margin-left: .5rem;
+}
+
+.normalize-hierarchy-col {
+    max-width: calc(25% - var(--i));
+}

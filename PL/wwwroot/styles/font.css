@@ -1,0 +1,41 @@
+﻿@font-face {
+    font-family: JS;
+    src: url('../fonts//JosefinSans//JosefinSans-VariableFont_wght.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: JS-I;
+    src: url('../fonts/JosefinSans/JosefinSans-Italic-VariableFont_wght.ttf') format('truetype');
+}
+
+h1 {
+    font: 600 3rem JS;
+    letter-spacing: -.2rem;
+}
+
+h2 {
+    font: 450 2.25rem JS;
+    letter-spacing: -.1rem;
+}
+
+h3 {
+    font: 400 2rem JS;
+}
+
+a {
+    font: 350 1.65rem JS-I;
+}
+
+p {
+    font: 350 1.65rem JS;
+}
+
+button {
+    font: 350 1.65rem JS;
+}
+
+input,
+textarea,
+label {
+    font: 350 1.65rem JS-I;
+}

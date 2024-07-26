@@ -1,0 +1,19 @@
+﻿@page
+@model PL.Pages.Client.CatalogModel
+@{
+    Layout = "_Marketplace";
+    ViewData["PageTitle"] = "Catalog";
+}
+
+@using DSL.Adapters.Category;
+
+<div class="container">
+    @foreach (CategoryRAdapter ctg in Model.Categories)
+    {
+        <div class="row">
+            <div class="col">
+                <a href="/products?category=@ctg.Key">@ctg.Category</a>
+            </div>
+        </div>
+    }
+</div>

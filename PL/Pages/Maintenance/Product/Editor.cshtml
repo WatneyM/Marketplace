@@ -1,0 +1,154 @@
+﻿@page "{category?}/{product?}"
+@model PL.Pages.Maintenance.Product.EditorModel
+@{
+    Layout = "_Maintenance";
+    ViewData["PageTitle"] = "Product Editor";
+
+    bool preLoad = !(Request.Query.ContainsKey("category") && Request.Query["category"] != "");
+    bool updateEntity = Request.Query.ContainsKey("product") && Request.Query["product"] != "";
+}
+
+@using DSL.Adapters.Attribute
+@using DSL.Adapters.Category
+
+@if (preLoad)
+{
+    <div class="container cp-b px-4 py-5 my-5">
+        <div class="row">
+            <div class="col ta-center">
+                <h2>Welcome</h2>
+                <p>Here some text about requirements</p>
+            </div>
+        </div>
+        <div class="row jc-center">
+            <div class="col-4 menu" data-component="menu">
+                <button type="button" class="button cp-b-t menu-header">
+                    <p class="d-inline">Categories</p>
+                    <i class="fa fa-angle-down fa-sm"></i>
+                </button>
+                <div class="menu-list">
+                    @foreach (CategoryRWAdapter category in Model.Categories)
+                    {
+                        <a href="/maintenance/product?category=@category.Key"
+                           data-node="ns" class="menu-node">@category.Category</a>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    int idx = 0;
+
+    <div class="container cp-b px-4 py-5 my-5">
+        <div class="row">
+            <div class="col ta-center">
+                <form method="post" autocomplete="off" spellcheck="false" id="form">
+                    <div class="form-record">
+                        <input type="password" class="secret" value="@Model.Product.Key"
+                               asp-for="Product.Key" readonly tabindex="-1" />
+                        <input type="password" class="secret" value="@Model.CurrentCategory"
+                               asp-for="Product.AttachedToCategory" readonly tabindex="-1" />
+                        <input type="password" class="secret" id="prod-image" value="@Model.Product.Image"
+                               asp-for="Product.Image" readonly tabindex="-1" />
+                    </div>
+
+                    <div class="form-record p-rel">
+                        <input type="file" data-component="loader" data-dest="#prod-image" />
+
+                        <span asp-validation-for="Product.Image"></span>
+                    </div>
+
+                    <div class="form-record">
+                        <label class="label" for="prod-name">Product</label>
+                        <input type="text" class="input" id="prod-name" placeholder=" "
+                               asp-for="Product.Product" />
+
+                        <span asp-validation-for="Product.Product"></span>
+                    </div>
+
+                    <div class="form-record">
+                        <label class="label" for="prod-s-desc">Short description</label>
+                        <textarea class="textarea" id="prod-s-desc"
+                                  asp-for="Product.ShortDescription"></textarea>
+                    </div>
+
+                    <div class="form-record">
+                        <label class="label" for="prod-l-desc">Long description</label>
+                        <textarea class="textarea" id="prod-l-desc"
+                                  asp-for="Product.LongDescription"></textarea>
+                    </div>
+
+                    <div class="form-record">
+                        <label class="label" for="prod-price">Price</label>
+                        <input type="text" class="input" id="prod-price" placeholder=" "
+                               asp-for="Product.Price" />
+
+                        <span asp-validation-for="Product.Price"></span>
+                    </div>
+
+                    @foreach (var group in Model.Groups)
+                    {
+                        <h3>@group.Group</h3>
+
+                        if (updateEntity)
+                        {
+                            foreach (ProductAttributeXRWAdapter _attribute in group.AttachedAttributes!)
+                            {
+                                idx = Model.Product.AttachedValues
+                                .IndexOf(Model.Product.AttachedValues
+                                .Find(p => p.AttachedToAttribute == _attribute.Key)!);
+
+                                <div class="form-record">
+                                    <label class="label" for="@group.Group-@_attribute.Attribute">@_attribute.Attribute</label>
+
+                                    <input type="text" class="input" id="@group.Group-@_attribute.Attribute" placeholder=" "
+                                           value="@Model.Product.AttachedValues![idx].Value"
+                                           asp-for="@Model.Product.AttachedValues![idx].Value" />
+                                    <input type="password" class="secret"
+                                           value="@_attribute.Key"
+                                           asp-for="@Model.Product.AttachedValues![idx].AttachedToAttribute"
+                                           readonly tabindex="-1" />
+
+                                    <span asp-validation-for="@Model.Product.AttachedValues![idx].Value"></span>
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            foreach (ProductAttributeXRWAdapter _attribute in group.AttachedAttributes!)
+                            {
+                                <div class="form-record">
+                                    <label class="label" for="@group.Group-@_attribute.Attribute">@_attribute.Attribute</label>
+
+                                    <input type="text" class="input" id="@group.Group-@_attribute.Attribute" placeholder=" "
+                                           value="@Model.Product.AttachedValues![idx].Value"
+                                           asp-for="@Model.Product.AttachedValues![idx].Value" />
+                                    <input type="password" class="secret"
+                                           value="@_attribute.Key"
+                                           asp-for="@Model.Product.AttachedValues![idx].AttachedToAttribute"
+                                           readonly tabindex="-1" />
+
+                                    <span asp-validation-for="@Model.Product.AttachedValues![idx].Value"></span>
+                                </div>
+
+                                ++idx;
+                            }
+                        }
+                    }
+                </form>
+                @if (updateEntity)
+                {
+                    <button class="button cp-b-bg" form="form"
+                            asp-page-handler="Push">Update</button>
+                }
+                else
+                {
+                    <button class="button cp-b-bg" form="form"
+                            asp-page-handler="Push">Create</button>
+                }
+            </div>
+        </div>
+    </div>
+}

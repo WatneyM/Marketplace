@@ -1,0 +1,70 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+
+    <link type="text/css" rel="stylesheet" href="~/styles/global.css" />
+    <link type="text/css" rel="stylesheet" href="~/styles/grid.css" />
+    <link type="text/css" rel="stylesheet" href="~/styles/font.css" />
+    <link type="text/css" rel="stylesheet" href="~/styles/border.css" />
+
+    <link type="text/css" rel="stylesheet" href="~/styles/components/menu.css" />
+    <link type="text/css" rel="stylesheet" href="~/styles/components/form.css" />
+
+    <link type="text/css" rel="stylesheet" href="~/lib/font-awesome/css/all.min.css" />
+
+    <title>@ViewData["PageTitle"]</title>
+
+    <script src="~/lib/jquery/jquery.min.js"></script>
+    <script src="~/lib/jquery-validate/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="row jc-sb ai-baseline">
+                <div class="col-0">
+                    <h1>Marketplace</h1>
+                </div>
+                <div class="col-0">
+                    <div class="row no-wrap">
+                        <div class="col mx-1">
+                            <a class="link" href="/maintenance/categories"><h2>Category</h2></a>
+                        </div>
+                        <div class="col mx-1">
+                            <a class="link" href="/maintenance/groups"><h2>Groups</h2></a>
+                        </div>
+                        <div class="col mx-1">
+                            <a class="link" href="/maintenance/attributes"><h2>Attributes</h2></a>
+                        </div>
+                        <div class="col mx-1">
+                            <a class="link" href="/maintenance/products"><h2>Products</h2></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-2 menu" data-component="menu">
+                    <button type="button" class="button cp-b-t menu-header">
+                        <p class="d-inline">User</p>
+                        <i class="fa fa-angle-down fa-sm"></i>
+                    </button>
+                    <div class="menu-list">
+                        <a href="/" data-node="ns" class="menu-node">Log In</a>
+                        <a href="/" data-node="ns" class="menu-node">Log Out</a>
+                        <hr />
+                        <a href="/" data-node="ns" class="menu-node">Home</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main>@RenderBody()</main>
+
+    <footer></footer>
+
+    <script src="~/scripts/components/menu.js"></script>
+    <script src="~/scripts/components/loader.js"></script>
+    <script src="~/scripts/init.js"></script>
+</body>
+</html>

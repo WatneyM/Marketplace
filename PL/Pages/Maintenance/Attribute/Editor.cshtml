@@ -1,0 +1,77 @@
+﻿@page "{attribute?}"
+@model PL.Pages.Maintenance.Attribute.EditorModel
+@{
+    Layout = "_Maintenance";
+    ViewData["PageTitle"] = "Attribute Editor";
+
+    bool updateEntity = Request.Query.ContainsKey("attribute") && Request.Query["attribute"] != "";
+}
+
+@using DSL.Adapters.Group
+
+<div class="container cp-b px-4 py-5 my-5">
+    <div class="row">
+        <div class="col ta-center">
+            <form method="post" autocomplete="off" spellcheck="false" id="attr-editor">
+                <div class="form-record">
+                    <input type="password" class="secret" value="@Model.Attribute.Key"
+                           asp-for="Attribute.Key" readonly tabindex="-1" />
+                    <input type="password" class="secret" id="attr-secret"
+                           asp-for="Attribute.AttachedToGroup" readonly tabindex="-1" />
+                </div>
+
+                <div class="form-record">
+                    <label class="label" for="attr-name">Attribute</label>
+                    <input type="text" class="input" id="attr-name" placeholder=" "
+                           asp-for="Attribute.Attribute" />
+
+                    <span asp-validation-for="Attribute.Attribute"></span>
+                </div>
+
+                <div class="row form-record">
+                    <div class="col p-rel">
+                        <label class="label" for="attr-group">Groups</label>
+                        <input type="text" class="input" id="attr-group"
+                               placeholder=" " readonly tabindex="-1" />
+
+                        <span asp-validation-for="Attribute.AttachedToGroup"></span>
+                    </div>
+                    <div class="col-3 mx-3 menu" data-component="menu-single"
+                         data-rel-text="#attr-group" data-rel-secret="#attr-secret">
+                        <button type="button" class="button cp-b-bg menu-header">
+                            <p class="d-inline">Select group</p>
+                            <i class="fa fa-angle-down fa-sm"></i>
+                        </button>
+                        <div class="menu-list">
+                            @{
+                                foreach (AttributeGroupRWAdapter group in Model.Groups)
+                                {
+                                    if (Model.Attribute.AttachedToGroup == group.Key)
+                                    {
+                                        <button type="button" class="menu-node" data-node="ss"
+                                                data-val="@group.Key" disabled>@group.Group</button>
+                                    }
+                                    else
+                                    {
+                                        <button type="button" class="menu-node" data-node="ss"
+                                                data-val="@group.Key">@group.Group</button>
+                                    }
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+            </form>
+            @if (updateEntity)
+            {
+                <button class="button cp-b-bg" form="attr-editor"
+                        asp-page-handler="Push">Update</button>
+            }
+            else
+            {
+                <button class="button cp-b-bg" form="attr-editor"
+                        asp-page-handler="Push">Create</button>
+            }
+        </div>
+    </div>
+</div>
