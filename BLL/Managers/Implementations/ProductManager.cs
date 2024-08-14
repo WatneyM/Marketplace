@@ -1,8 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
+using BLL.Managers.Declarations;
+
 using DAL;
 using DAL.Models;
-using BLL.Managers.Declarations;
 
 namespace BLL.Managers.Implementations
 {
@@ -12,6 +13,11 @@ namespace BLL.Managers.Implementations
         private readonly ApplicationContext _context = context;
         private readonly DbSet<ProductModel> _set = context
             .Set<ProductModel>();
+
+        public int Count()
+        {
+            return _set.Count();
+        }
 
         public bool Has(string dbKey)
         {
@@ -109,6 +115,26 @@ namespace BLL.Managers.Implementations
             }
 
             return true;
+        }
+
+        public int Count(string dbKey)
+        {
+            return _set.AsNoTracking()
+                .Where(p => p.AttachedToCategory == dbKey)
+                .Count();
+        }
+
+        public ProductModel ReadProductOfCategory(string categoryKey)
+        {
+            return _set.AsNoTracking()
+                .Single(p => p.AttachedToCategory == categoryKey);
+        }
+
+        public IEnumerable<ProductModel> ReadProductsOfCategory(string categoryKey)
+        {
+            return _set.AsNoTracking()
+                .Where(p => p.AttachedToCategory == categoryKey)
+                .AsEnumerable();
         }
     }
 }

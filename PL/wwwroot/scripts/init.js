@@ -1,10 +1,27 @@
 ﻿let menus;
-let loaders
+let loaders;
+let collapsables;
 
 $(() => {
     menus = buildMenus();
     loaders = buildLoaders();
+    collapsables = buildCollapsables();
+
+    disableScrollOnMenuKeyAction();
 });
+
+let disableScrollOnMenuKeyAction = () => {
+    window.addEventListener('keydown', (ev) => {
+        if ($(ev.target).hasClass('menu-node')) {
+            ev.preventDefault();
+        }
+    });
+    window.addEventListener('keyup', (ev) => {
+        if ($(ev.target).hasClass('menu-node')) {
+            ev.preventDefault();
+        }
+    });
+}
 
 let buildMenus = () => {
     menus = new MenuStorage();
@@ -40,8 +57,18 @@ let buildLoaders = () => {
     $('input[type="file"]').each((idx, item) => {
         let loader = $(item);
 
-        loaders.push(new Loader(loader, $(loader.data('dest'))));
+        loaders.push(new Loader(loader, $(loader.data('dest')), $(loader.data('img')), $(loader.data('label'))));
     });
 
     return loaders;
+}
+
+let buildCollapsables = () => {
+    collapsables = new CollapsableStorage();
+
+    $('*[data-component="collapsable"]').each((idx, item) => {
+        collapsables.toStorage(new Collapsable(idx, $(item), collapsables));
+    });
+
+    return collapsables;
 }

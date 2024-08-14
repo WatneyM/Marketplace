@@ -1,8 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
+using BLL.Managers.Declarations;
+
 using DAL;
 using DAL.Models;
-using BLL.Managers.Declarations;
 
 namespace BLL.Managers.Implementations
 {
@@ -13,35 +14,9 @@ namespace BLL.Managers.Implementations
         private readonly DbSet<CategoryModel> _set = context
             .Set<CategoryModel>();
 
-        private void AddAssociatedStatus(string parentKey)
+        public int Count()
         {
-            CategoryModel parent = Track(parentKey)!;
-
-            if (!HasAttached(parent.Key, 1))
-                parent.Attachable = true;
-        }
-
-        private void RemoveAssociatedStatus(string parentKey)
-        {
-            CategoryModel parent = Track(parentKey)!;
-
-            parent.Attachable = false;
-        }
-
-        private void DetachPrevParent(string prevParentKey)
-        {
-            CategoryModel parent = Track(prevParentKey)!;
-
-            if (!HasAttached(prevParentKey, 1))
-                parent.Attachable = true;
-        }
-
-        private void AttachNextParent(string nextParentKey)
-        {
-            CategoryModel parent = Track(nextParentKey)!;
-
-            if (!HasAttached(nextParentKey))
-                parent.Attachable = false;
+            return _set.Count();
         }
 
         public bool Has(string dbKey)
@@ -71,9 +46,6 @@ namespace BLL.Managers.Implementations
             model.CreatedAt = DateTime.Now;
             model.ModifiedAt = model.CreatedAt;
 
-            if (model.AttachedToCategory is not null)
-                RemoveAssociatedStatus(model.AttachedToCategory);
-
             try
             {
                 _set.Add(model);
@@ -92,22 +64,8 @@ namespace BLL.Managers.Implementations
             var original = Track(model.Key)!;
 
             original.Category = model.Category;
+            original.Description = model.Description;
             original.ModifiedAt = DateTime.Now;
-
-            if (model.AttachedToCategory is not null
-                && original.AttachedToCategory is not null
-                && model.AttachedToCategory != original.AttachedToCategory)
-            {
-                DetachPrevParent(original.AttachedToCategory);
-                AttachNextParent(model.AttachedToCategory);
-            }
-            else if (model.AttachedToCategory is null
-                && original.AttachedToCategory is not null)
-                DetachPrevParent(original.AttachedToCategory);
-            else if (model.AttachedToCategory is not null
-                && original.AttachedToCategory is null)
-                AttachNextParent(model.AttachedToCategory);
-
             original.AttachedToCategory = model.AttachedToCategory;
 
             try
@@ -124,8 +82,8 @@ namespace BLL.Managers.Implementations
 
         public bool Delete(CategoryModel model)
         {
-            if (model.AttachedToCategory is not null)
-                AddAssociatedStatus(model.AttachedToCategory);
+            if (model.AttachedGroups is not null
+                && model.AttachedGroups.Count != 0) return false;
 
             try
             {
@@ -140,24 +98,17 @@ namespace BLL.Managers.Implementations
             return true;
         }
 
-        public bool HasAttached(string categoryKey)
-        {
-            return _set.AsNoTracking()
-                .Where(p => p.AttachedToCategory == categoryKey)
-                .Count() == 1;
-        }
-
-        public bool HasAttached(string categoryKey, int requiredAmount)
-        {
-            return _set.AsNoTracking()
-                .Where(p => p.AttachedToCategory == categoryKey)
-                .Count() > requiredAmount;
-        }
-
         public IEnumerable<CategoryModel> ReadAttachables()
         {
             return _set.AsNoTracking()
-                .Where(p => p.Attachable)
+                .Where(p => p.AttachedToCategory != null)
+                .AsEnumerable();
+        }
+
+        public IEnumerable<CategoryModel> ReadPrimaries()
+        {
+            return _set.AsNoTracking()
+                .Where(p => p.AttachedToCategory == null)
                 .AsEnumerable();
         }
     }

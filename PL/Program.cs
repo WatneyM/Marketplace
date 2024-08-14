@@ -1,12 +1,12 @@
 using Microsoft.EntityFrameworkCore;
 
-using DSL.Services.Declarations;
-using DSL.Services.Implementations;
-
-using DAL;
-using DAL.Models;
 using BLL.Managers.Declarations;
 using BLL.Managers.Implementations;
+
+using DAL;
+
+using DSL.Services.Declarations;
+using DSL.Services.Implementations;
 
 WebApplicationBuilder builder;
 WebApplication app;
@@ -32,7 +32,11 @@ WebApplication app;
     builder.Services.AddRazorPages().AddRazorPagesOptions(options =>
     {
         options.Conventions
+        .AddPageRoute("/Client/Categories", "categories");
+        options.Conventions
         .AddPageRoute("/Client/Catalog", "catalog");
+        options.Conventions
+        .AddPageRoute("/Client/Product", "product");
 
         options.Conventions
         .AddPageRoute("/Maintenance/Maintenance", "maintenance");

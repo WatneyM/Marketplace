@@ -1,76 +1,139 @@
-﻿@page "{group?}"
+﻿@page "{gid?}"
 @model PL.Pages.Maintenance.Group.EditorModel
 @{
-    Layout = "_Maintenance";
-    ViewData["PageTitle"] = "Group Editor";
+    bool groupAdded = Request.Query.ContainsKey("gid")
+    && Request.Query["gid"] != "";
 
-    bool updateEntity = Request.Query.ContainsKey("group") && Request.Query["group"] != "";
+    @if (groupAdded)
+    {
+        ViewData["PageTitle"] = "View - " + Model.Group.Group;
+    }
+    else
+    {
+        ViewData["PageTitle"] = "New Group";
+    }
+
+    Layout = "_Maintenance";
 }
 
 @using DSL.Adapters.Category
 
-<div class="container cp-b px-4 py-5 my-5">
-    <div class="row">
-        <div class="col ta-center">
-            <form method="post" autocomplete="off" spellcheck="false" id="group-editor">
-                <div class="form-record">
-                    <input type="password" class="secret" value="@Model.Group.Key"
-                           asp-for="Group.Key" readonly tabindex="-1" />
-                    <input type="password" class="secret" id="group-secret"
-                           asp-for="Group.AttachedToCategory" readonly tabindex="-1" />
-                </div>
+<div class="container px-5 my-5">
+    <div class="row ai-center my-5">
+        <div class="col-0">
+            <i class="fa fa-info-circle fa-2xl clr-g mx-3"></i>
+        </div>
 
-                <div class="form-record">
-                    <label class="label" for="group-name">Group</label>
-                    <input type="text" class="input" id="group-name" placeholder=" "
-                           asp-for="Group.Group" />
-
-                    <span asp-validation-for="Group.Group"></span>
-                </div>
-
-                <div class="row form-record">
-                    <div class="col p-rel">
-                        <label class="label" for="group-category">Category</label>
-                        <input type="text" class="input" id="group-category"
-                               placeholder=" " readonly tabindex="-1" />
-
-                        <span asp-validation-for="Group.AttachedToCategory"></span>
-                    </div>
-                    <div class="col-3 mx-3 menu" data-component="menu-single"
-                         data-rel-text="#group-category" data-rel-secret="#group-secret">
-                        <button type="button" class="button cp-b-bg menu-header">
-                            <p class="d-inline">Select category</p>
-                            <i class="fa fa-angle-down fa-sm"></i>
-                        </button>
-                        <div class="menu-list">
-                            @foreach (CategoryRWAdapter category in Model.Categories)
-                            {
-                                if (Model.Group.AttachedToCategory is not null
-                                && Model.Group.AttachedToCategory == category.Key)
-                                {
-                                    <button type="button" class="menu-node" data-node="ss"
-                                            data-val="@category.Key" disabled>@category.Category</button>
-                                }
-                                else
-                                {
-                                    <button type="button" class="menu-node" data-node="ss"
-                                            data-val="@category.Key">@category.Category</button>
-                                }
-                            }
-                        </div>
-                    </div>
-                </div>
-            </form>
-            @if (updateEntity)
+        <div class="col">
+            @if (groupAdded)
             {
-                <button class="button cp-b-bg" form="group-editor"
-                        asp-page-handler="Push">Update</button>
+                <h3>
+                    You have selected [@Model.Group.Group] group.<br />
+                    Review, or update information about attribute group, if neccesary
+                </h3>
             }
             else
             {
-                <button class="button cp-b-bg" form="group-editor"
-                        asp-page-handler="Push">Create</button>
+                <h3>
+                    You have selected option to add new attribute group.<br />
+                    Use fields below and provide information about new group.<br />
+                    Add appropriate group name and choose category, to which new group will be attached.<br />
+                    New products, using attached category, will use this group to get access to required attributes
+                </h3>
             }
         </div>
+    </div>
+
+    @if (groupAdded)
+    {
+        <div class="row ai-center">
+            <div class="col-0">
+                <i class="fa fa-info-circle fa-2xl clr-r mx-3"></i>
+            </div>
+
+            <div class="col">
+                <h3>
+                    Attention! Category change is unsafe operation.<br />
+                    Make sure, currently related category doesn't contain any products.<br />
+                    Otherwise, some attribute data in related products might become unreadable,
+                    despite on being in database still!
+                </h3>
+            </div>
+        </div>
+    }
+</div>
+
+<div class="container px-5 my-5">
+    <form method="post" autocomplete="off" id="viewer">
+        <div class="field">
+            <input type="password" class="secret" value="@Model.Group.Key"
+                   asp-for="Group.Key" readonly tabindex="-1" />
+            <input type="password" class="secret" id="g-attachment-s"
+                   asp-for="Group.AttachedToCategory" readonly tabindex="-1" />
+        </div>
+
+        <div class="field">
+            <input type="text" class="input" id="g-name" placeholder=" "
+                   asp-for="Group.Group" />
+            <label class="label" for="g-name">Group</label>
+
+            <span asp-validation-for="Group.Group"></span>
+        </div>
+
+        <div class="field">
+            <input type="text" class="input" id="g-attachment-v"
+                   placeholder=" " readonly tabindex="-1" />
+            <label class="label" for="g-attachment-v">Attached To Category</label>
+
+            <span asp-validation-for="Group.AttachedToCategory"></span>
+        </div>
+    </form>
+</div>
+
+<div class="container px-5 my-5">
+    <div class="row jc-center">
+        <div class="col-0 my-1 mx-2 menu" data-component="menu-single"
+             data-rel-text="#g-attachment-v" data-rel-secret="#g-attachment-s">
+            <button type="button" class="button">
+                <p class="insertable">Choose category</p>
+                <i class="fa fa-angle-down fa-sm"></i>
+            </button>
+            <div class="menu-list">
+                @foreach (CategoryRAdapter category in Model.Categories)
+                {
+                    if (Model.Group.AttachedToCategory == category.Key)
+                    {
+                        <button type="button" class="menu-node" data-node="ss"
+                        data-val="@category.Key" disabled>@category.Category</button>
+                    }
+                    else
+                    {
+                        <button type="button" class="menu-node" data-node="ss"
+                        data-val="@category.Key">@category.Category</button>
+                    }
+                }
+            </div>
+        </div>
+
+        <div class="col-0 my-1 mx-2">
+            @if (groupAdded)
+            {
+                <button class="button" form="viewer"
+                    asp-page-handler="Push">Update</button>
+            }
+            else
+            {
+                <button class="button" form="viewer"
+                    asp-page-handler="Push">Create</button>
+            }
+        </div>
+
+        @if (groupAdded)
+        {
+            <div class="col-0 my-1 mx-2">
+                <a class="button warning"
+                   href="/maintenance/group?gid=@Model.Group.Key&handler=drop">Drop</a>
+            </div>
+        }
     </div>
 </div>

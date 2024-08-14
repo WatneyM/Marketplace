@@ -9,33 +9,38 @@
 }
 
 h1 {
-    font: 600 3rem JS;
-    letter-spacing: -.2rem;
+    color: var(--clr-white);
+    font: 400 3rem JS;
 }
 
 h2 {
-    font: 450 2.25rem JS;
-    letter-spacing: -.1rem;
-}
-
-h3 {
+    color: var(--clr-blue);
     font: 400 2rem JS;
 }
 
+h3 {
+    color: var(--clr-white);
+    font: 400 2rem JS-I;
+}
+
 a {
-    font: 350 1.65rem JS-I;
+    color: var(--clr-white);
+    font: 300 1.75rem JS-I;
 }
 
-p {
-    font: 350 1.65rem JS;
-}
-
+p,
 button {
-    font: 350 1.65rem JS;
+    color: var(--clr-grey);
+    font: 300 1.75rem JS;
 }
 
 input,
-textarea,
+textarea {
+    color: var(--clr-white);
+    font: 300 1.75rem JS;
+}
+
 label {
-    font: 350 1.65rem JS-I;
+    color: var(--clr-grey);
+    font: 400 1.5rem JS-I;
 }

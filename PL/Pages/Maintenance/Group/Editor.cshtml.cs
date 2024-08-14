@@ -15,19 +15,19 @@ namespace PL.Pages.Maintenance.Group
         private readonly ICategoryService _cService = cService;
 
         public AttributeGroupRWAdapter Group { get; set; } = new();
-        public List<CategoryRWAdapter> Categories { get; set; } = [];
+        public List<CategoryRAdapter> Categories { get; set; } = [];
 
-        public void OnGet(string group)
+        public void OnGet(string gid)
         {
-            if (group is not null)
-                Group = _gService.GetGroup(group);
+            if (gid is not null)
+                Group = _gService.GetGroup(gid);
 
-            Categories = _cService.GetAttachableCategories().ToList();
+            Categories.AddRange(_cService.GetAttachableCategories());
         }
 
-        public IActionResult OnGetDrop(string group)
+        public IActionResult OnGetDrop(string gid)
         {
-            _gService.DropGroup(group);
+            _gService.DropGroup(gid);
 
             return Redirect("/maintenance/groups");
         }

@@ -12,21 +12,21 @@ namespace PL.Pages.Maintenance.Category
         private readonly ICategoryService _service = service;
 
         public CategoryRWAdapter Category { get; set; } = new();
-        public List<CategoryRWAdapter> Categories { get; set; } = [];
+        public List<CategoryRAdapter> Categories { get; set; } = [];
 
-        public void OnGet(string category)
+        public void OnGet(string cid)
         {
-            if (category is not null)
+            if (cid is not null)
             {
-                Category = _service.GetCategory(category);
-                Categories = _service.GetCategoriesExceptKey(category).ToList();
+                Category = _service.GetCategory(cid);
+                Categories.AddRange(_service.GetPrimaryCategories(Category.Key));
             }
-            else Categories = _service.GetCategories().ToList();
+            else Categories.AddRange(_service.GetPrimaryCategories());
         }
 
-        public IActionResult OnGetDrop(string category)
+        public IActionResult OnGetDrop(string cid)
         {
-            _service.DropCategory(category);
+            _service.DropCategory(cid);
 
             return Redirect("/maintenance/categories");
         }

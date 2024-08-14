@@ -12,14 +12,13 @@ namespace DAL.Models
 
         [Column("Category", Order = 2)]
         public string Category { get; set; } = string.Empty;
+        [Column("Description", Order = 3)]
+        public string? Description { get; set; }
 
-        [Column("Attached Category Key", Order = 3)]
+        [Column("Attached Category Key", Order = 4)]
         public string? AttachedToCategory { get; set; }
         [ForeignKey("AttachedToCategory")]
         public CategoryModel? CategoryNav { get; set; }
-
-        [Column("Attachable", Order = 4)]
-        public bool Attachable { get; set; } = true;
 
         [Column("Created At", Order = 5)]
         public DateTime CreatedAt { get; set; }

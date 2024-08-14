@@ -2,47 +2,53 @@
     position: relative;
 }
 
-.menu-header {
-    height: 4rem;
-    width: 100%;
-    padding: 0!important;
-}
-
 .menu-list {
+    background: var(--clr-dark-blue);
+    display: none;
     position: absolute;
     top: 100%;
-    width: calc(100% - 1rem);
-    z-index: 2;
-    background-color: #e8e8e8;
     transform: scaleY(0);
     transform-origin: top;
-    transition: .1s ease-in-out;
-    display: none;
+    transition: .25s ease-in-out;
+    min-width: 100%;
+    z-index: 2;
+}
+
+.ml-l {
+    left: 0;
+}
+
+.ml-r {
+    right: 0;
 }
 
 .menu-popup {
     transform: scaleY(1) !important;
-    transition: .1s ease-in-out;
+    transition: .25s ease-in-out;
 }
 
 .menu-node,
 .menu-reset {
-    padding: 0.25rem 1rem;
+    background: transparent;
     border: none;
-    background-color: transparent;
+    padding: 1rem;
+    text-align: center;
     width: 100%;
-    text-align: start;
+    text-wrap: nowrap;
+}
+
+.menu-node:disabled {
+    color: var(--clr-dark-grey);
 }
 
 .menu-reset {
-    text-align: end;
-    color: red;/*!!!*/
+    color: var(--clr-red);
 }
 
 .menu-node:hover,
 .menu-reset:hover,
 .menu-node:focus,
 .menu-reset:focus {
-    background-color: var(--clr-highlight-grey);
+    background: var(--clr-dark-red);
     outline: none;
 }

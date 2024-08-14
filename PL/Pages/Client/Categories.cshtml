@@ -1,0 +1,107 @@
+﻿@page
+@model PL.Pages.Client.CatalogModel
+@{
+    ViewData["PageTitle"] = "View Categories";
+    Layout = "_Marketplace";
+}
+
+@using DSL.Adapters.Category
+
+<div class="container px-5 my-5">
+    <div class="row ai-center">
+        <div class="col-0">
+            <i class="fa fa-info-circle fa-2xl clr-g mx-3"></i>
+        </div>
+
+        <div class="col my-3">
+            <h3>
+                Welcome to catalog page. Here you can find all categories, we can provide you service for.<br />
+                Choose the category you interested for and watch full list of associated product.
+            </h3>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col my-3 ta-end">
+            <p>
+                Up to <strong>@Model.Attached.Count</strong> categories is currently available to you to review products
+            </p>
+        </div>
+    </div>
+</div>
+
+@if (Model.Primaries.Count > 0)
+{
+    <div class="container px-5 my-5">
+        @foreach (CategoryRAdapter primaryCtg in Model.Primaries)
+        {
+            List<CategoryRAdapter> attached = Model.Attached
+            .FindAll(p => p.AttachedToCategory == primaryCtg.Key);
+
+            <div class="card my-5 p-3">
+                <div class="row px-3">
+                    <div class="col ta-center">
+                        <h2>@primaryCtg.Category</h2>
+                    </div>
+                </div>
+
+                <div class="row my-3">
+                    <div class="col ta-center">
+                        <p>@primaryCtg.Description</p>
+                    </div>
+                </div>
+
+                <button class="collapsable" data-component="collapsable">
+                    <div class="collapsable-content px-3">
+                        @if (attached.Count > 0)
+                        {
+                            @foreach (CategoryRAdapter attachedCtg in attached)
+                            {
+                                <a class="highlight my-3 p-3" href="/catalog?cid=@attachedCtg.Key">
+                                    <div class="row ai-center">
+                                        <div class="col ta-center">
+                                            <h3>@attachedCtg.Category</h3>
+                                        </div>
+                                    </div>
+
+                                    <div class="row my-3">
+                                        <div class="col ta-center">
+                                            <p>@attachedCtg.Description</p>
+                                        </div>
+                                    </div>
+
+                                    <div class="row my-3">
+                                        <div class="col ta-center">
+                                            <p>Up to <strong>@attachedCtg.AttachedProducts</strong> products is related to this category</p>
+                                        </div>
+                                    </div>
+                                </a>
+                            }
+                        }
+                        else
+                        {
+                            <div class="row my-5">
+                                <div class="col ta-center">
+                                    <p>Selected category is currently empty and have no one subcategory</p>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                    <div class="collapsable-down ta-center">
+                        <i class="fa fa-angle-down fa-xl"></i>
+                    </div>
+                </button>
+            </div>
+        }
+    </div>
+}
+else
+{
+    <div class="container px-5 my-5">
+        <div class="row my-3">
+            <div class="col ta-center">
+                <p>Seems, the list of categories is currently unavailable</p>
+            </div>
+        </div>
+    </div>
+}

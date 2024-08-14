@@ -4,6 +4,8 @@
     {
         public bool Has(string dbKey);
 
+        public int Count();
+
         public TModel? Track(string dbKey);
         public TModel? Read(string dbKey);
         public IEnumerable<TModel> ReadAll();

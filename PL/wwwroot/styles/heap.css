@@ -1,0 +1,189 @@
+﻿/*
+    BEGIN OF --BUTTON STYLE REGION
+*/
+.button {
+    align-content: center;
+    background: var(--clr-blue);
+    cursor: pointer;
+    height: 4rem;
+    padding: 0 2rem;
+    position: relative;
+    text-transform: uppercase;
+    text-wrap: nowrap;
+    z-index: 1;
+}
+
+.warning {
+    background: var(--clr-red);
+}
+
+.warning:hover::after,
+.warning:focus-within::after {
+    background: var(--clr-red)!important;
+}
+
+.button::after,
+.warning::after {
+    background: var(--clr-bg);
+    clip-path: var(--border-outer);
+    content: "";
+    height: 100%;
+    left: 0;
+    position: absolute;
+    top: 0;
+    transition: .25s linear;
+    width: 100%;
+}
+
+.button::before {
+    background: var(--clr-bg);
+    clip-path: var(--border-inner);
+    content: "";
+    height: 100%;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    z-index: -1;
+}
+
+.button:hover::after,
+.button:focus-within::after {
+    background: var(--clr-blue);
+    transition: .25s linear;
+}
+/*
+    END OF --BUTTON STYLE REGION
+    |
+    BEGIN OF --A STYLE REGION
+*/
+.link {
+    position: relative;
+    text-wrap: nowrap;
+    display: inline-block;
+}
+
+.link::after {
+    background: var(--clr-blue);
+    bottom: 0;
+    content: "";
+    height: .2rem;
+    left: 0;
+    position: absolute;
+    transform: scaleX(0);
+    transform-origin: bottom right;
+    transition: transform .25s ease-in-out;
+    width: 100%;
+}
+
+.link:hover::after,
+.link:focus-within::after {
+    transform: scaleX(1);
+    transform-origin: bottom left;
+}
+
+.field-validation-error {
+    background: var(--clr-dark-grey);
+    border-radius: .5rem;
+    bottom: -.85rem;
+    color: var(--clr-red);
+    font: 300 1.65rem JS-I;
+    padding: 0 .5rem;
+    position: absolute;
+    right: 2rem;
+    z-index: 2;
+}
+/*
+    END OF --BUTTON STYLE REGION
+    |
+    BEGIN OF --IMG STYLE REGION
+*/
+.img-md {
+    aspect-ratio: 1;
+    height: auto;
+    object-fit: cover;
+    width: 100%;
+    max-width: 20vw;
+    max-height: 20vw;
+    min-width: var(--m-width);
+    min-height: var(--m-width);
+    padding: 2rem;
+    border-radius: .5rem;
+}
+
+.img-sm {
+    aspect-ratio: 1;
+    height: auto;
+    max-width: 10vw;
+    max-height: 10vw;
+    min-width: var(--m-width);
+    min-height: var(--m-width);
+    object-fit: cover;
+    width: 100%;
+    padding: 2rem;
+    border-radius: .5rem;
+}
+/*
+    END OF --IMG STYLE REGION
+*/
+.clr-g {
+    color: var(--clr-green);
+}
+
+.clr-o {
+    color: var(--clr-orange);
+}
+
+.clr-r {
+    color: var(--clr-red);
+}
+
+.highlight {
+    border-radius: .5rem;
+    transition: .2s ease-in-out;
+}
+
+.highlight * {
+    cursor: pointer;
+}
+
+.highlight:hover {
+    transition: .2s ease-in-out;
+    background: var(--clr-dark-red);
+}
+
+.wrappable {
+    min-width: var(--m-width);
+}
+
+.insertable {
+    display: inline;
+}
+
+.card {
+    box-shadow: .5rem .5rem 1rem var(--clr-black),
+        -.1rem -.1rem 1rem var(--clr-dark-grey);
+    border-radius: .5rem;
+}
+
+.block:focus-within {
+    color: var(--clr-blue);
+}
+
+.block-a {
+    display: flex;
+}
+
+.block-b {
+    display: none;
+}
+
+@media screen and (width < 769px) {
+    .block-a {
+        display: none;
+    }
+
+    .block-b {
+        display: flex;
+    }
+}

@@ -1,0 +1,29 @@
+﻿.collapsable {
+    border-radius: .5rem;
+    position: relative;
+    text-align: initial;
+    width: 100%;
+}
+
+.collapsable-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.5s ease-out;
+}
+
+.collapsable-down {
+    transition: .5s ease-in-out;
+    padding: 1rem 0;
+}
+
+.collapsable-up {
+    transform: rotateX(180deg);
+    transition: .5s ease-in-out!important;
+}
+
+.collapsable-down:hover,
+.collapsable:focus .collapsable-down,
+.collapsable-up:hover,
+.collapsable:focus .collapsable-up {
+    color: var(--clr-blue);
+}

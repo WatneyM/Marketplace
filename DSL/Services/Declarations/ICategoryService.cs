@@ -7,8 +7,9 @@ namespace DSL.Services.Declarations
         public CategoryRWAdapter GetCategory(string categoryKey);
 
         public IEnumerable<CategoryRWAdapter> GetCategories();
-        public IEnumerable<CategoryRWAdapter> GetAttachableCategories();
-        public IEnumerable<CategoryRWAdapter> GetCategoriesExceptKey(string categoryKey);
+        public IEnumerable<CategoryRAdapter> GetAttachableCategories();
+        public IEnumerable<CategoryRAdapter> GetPrimaryCategories();
+        public IEnumerable<CategoryRAdapter> GetPrimaryCategories(string exceptKey);
 
         public IEnumerable<CategoryRAdapter> GetCategoriesAsList();
 

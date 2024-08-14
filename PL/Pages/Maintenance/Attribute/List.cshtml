@@ -1,48 +1,118 @@
 ﻿@page
 @model PL.Pages.Maintenance.Attribute.ListModel
 @{
+    ViewData["PageTitle"] = "View All Attributes";
     Layout = "_Maintenance";
-    ViewData["PageTitle"] = "All Attributes";
 }
 
-<div class="container cp-b px-4 py-5 my-5">
-    <div class="row">
-        <div class="col"><h3>Attribute</h3></div>
-        <div class="col"><h3>Attached To Group</h3></div>
-        <div class="col"><h3>Created At</h3></div>
-        <div class="col"><h3>Updated At</h3></div>
-        <div class="col"><h3>Actions</h3></div>
-    </div>
-    <hr />
+@using DSL.Adapters.Attribute
+@using DSL.Adapters.Group
 
-    @if (Model.Attributes.Count != 0)
-    {
-        @foreach (var attr in Model.Attributes)
+<div class="container px-5 my-5">
+    <div class="row ai-center">
+        <div class="col-0">
+            <i class="fa fa-info-circle fa-2xl clr-g mx-3"></i>
+        </div>
+
+        <div class="col my-3">
+            <h3>
+                View list of all attributes, located in storage.<br />
+                Choose required attribute group to see attached attributes.<br />
+                Use [Add Attribute] below to add new attribute to storage
+            </h3>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col my-3 ta-end">
+            <p>
+                Up to <strong>@Model.Attributes.Count</strong> attributes loaded from Storage
+            </p>
+        </div>
+    </div>
+</div>
+
+@if (Model.Attributes.Count != 0)
+{
+    <div class="container px-5 my-5">
+        @foreach (AttributeGroupRAdapter group in Model.Groups)
         {
-            <div class="row">
-                <div class="col"><p>@attr.Attribute</p></div>
-                <div class="col"><p>@attr.AttachedToGroup</p></div>
-                <div class="col"><p>@attr.CreatedAt</p></div>
-                <div class="col"><p>@attr.ModifiedAt</p></div>
-                <div class="col">
-                    <a class="link" href="/maintenance/attribute?attribute=@attr.Key">Edit</a>
-                    <a class="link" href="/maintenance/attribute?attribute=@attr.Key&handler=Drop">Remove</a>
+            List<AttributeRAdapter> attached = Model.Attributes
+            .FindAll(p => p.AttachedToGroup == group.Group);
+
+            <div class="card my-5 p-3">
+                <div class="row px-3">
+                    <div class="col ta-center">
+                        <h2>@group.Group</h2>
+                    </div>
                 </div>
+
+                <button class="collapsable" data-component="collapsable">
+                    <div class="collapsable-content px-3">
+                        @if (attached.Count > 0)
+                        {
+                            @foreach (AttributeRAdapter attachedAttr in attached)
+                            {
+                                <div class="highlight my-3 p-3">
+                                    <div class="row">
+                                        <div class="col ta-center">
+                                            <h3>@attachedAttr.Attribute</h3>
+                                        </div>
+                                    </div>
+
+                                    <div class="row my-3">
+                                        <div class="col">
+                                            <p class="wrappable">C: @attachedAttr.CreatedAt</p>
+                                        </div>
+
+                                        <div class="col">
+                                            <p class="wrappable">M: @attachedAttr.ModifiedAt</p>
+                                        </div>
+                                    </div>
+
+                                    <div class="row my-3 jc-end">
+                                        <div class="col-0">
+                                            <a class="button" href="/maintenance/attribute?aid=@attachedAttr.Key">
+                                                <i class="fa fa-pen fa-sm"></i>
+                                                <p class="insertable">View</p>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            <div class="row my-5">
+                                <div class="col ta-center">
+                                    <p>Selected group contains no attributes</p>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                    <div class="collapsable-down ta-center">
+                        <i class="fa fa-angle-down fa-xl"></i>
+                    </div>
+                </button>
             </div>
         }
-    }
-    else
-    {
-        <div class="row my-1">
+    </div>
+}
+else
+{
+    <div class="container px-5 my-5">
+        <div class="row my-3">
             <div class="col ta-center">
-                <p>Attribute list is empty. Use button below to add first.</p>
+                <p>No attributes located in Storage</p>
             </div>
         </div>
-    }
+    </div>
+}
 
-    <div class="row">
-        <div class="col ta-center">
-            <a class="button cp-b-bg my-2" href="/maintenance/attribute">Create New</a>
+<div class="container px-5 my-5">
+    <div class="row jc-center">
+        <div class="col-0">
+            <a class="button my-2" href="/maintenance/attribute">Add Attribute</a>
         </div>
     </div>
 </div>

@@ -1,77 +1,141 @@
-﻿@page "{attribute?}"
+﻿@page "{aid?}"
 @model PL.Pages.Maintenance.Attribute.EditorModel
 @{
-    Layout = "_Maintenance";
-    ViewData["PageTitle"] = "Attribute Editor";
+    bool attributeAdded = Request.Query.ContainsKey("aid")
+    && Request.Query["aid"] != "";
 
-    bool updateEntity = Request.Query.ContainsKey("attribute") && Request.Query["attribute"] != "";
+    @if (attributeAdded)
+    {
+        ViewData["PageTitle"] = "View - " + Model.Attribute.Attribute;
+    }
+    else
+    {
+        ViewData["PageTitle"] = "New Attribute";
+    }
+
+    Layout = "_Maintenance";
 }
 
 @using DSL.Adapters.Group
 
-<div class="container cp-b px-4 py-5 my-5">
-    <div class="row">
-        <div class="col ta-center">
-            <form method="post" autocomplete="off" spellcheck="false" id="attr-editor">
-                <div class="form-record">
-                    <input type="password" class="secret" value="@Model.Attribute.Key"
-                           asp-for="Attribute.Key" readonly tabindex="-1" />
-                    <input type="password" class="secret" id="attr-secret"
-                           asp-for="Attribute.AttachedToGroup" readonly tabindex="-1" />
-                </div>
+<div class="container px-5 my-5">
+    <div class="row ai-center my-5">
+        <div class="col-0">
+            <i class="fa fa-info-circle fa-2xl clr-g mx-3"></i>
+        </div>
 
-                <div class="form-record">
-                    <label class="label" for="attr-name">Attribute</label>
-                    <input type="text" class="input" id="attr-name" placeholder=" "
-                           asp-for="Attribute.Attribute" />
-
-                    <span asp-validation-for="Attribute.Attribute"></span>
-                </div>
-
-                <div class="row form-record">
-                    <div class="col p-rel">
-                        <label class="label" for="attr-group">Groups</label>
-                        <input type="text" class="input" id="attr-group"
-                               placeholder=" " readonly tabindex="-1" />
-
-                        <span asp-validation-for="Attribute.AttachedToGroup"></span>
-                    </div>
-                    <div class="col-3 mx-3 menu" data-component="menu-single"
-                         data-rel-text="#attr-group" data-rel-secret="#attr-secret">
-                        <button type="button" class="button cp-b-bg menu-header">
-                            <p class="d-inline">Select group</p>
-                            <i class="fa fa-angle-down fa-sm"></i>
-                        </button>
-                        <div class="menu-list">
-                            @{
-                                foreach (AttributeGroupRWAdapter group in Model.Groups)
-                                {
-                                    if (Model.Attribute.AttachedToGroup == group.Key)
-                                    {
-                                        <button type="button" class="menu-node" data-node="ss"
-                                                data-val="@group.Key" disabled>@group.Group</button>
-                                    }
-                                    else
-                                    {
-                                        <button type="button" class="menu-node" data-node="ss"
-                                                data-val="@group.Key">@group.Group</button>
-                                    }
-                                }
-                            }
-                        </div>
-                    </div>
-                </div>
-            </form>
-            @if (updateEntity)
+        <div class="col">
+            @if (attributeAdded)
             {
-                <button class="button cp-b-bg" form="attr-editor"
-                        asp-page-handler="Push">Update</button>
+                <h3>
+                    You have selected [@Model.Attribute.Attribute] attribute.<br />
+                    Review, or update information about attribute, if neccesary
+                </h3>
             }
             else
             {
-                <button class="button cp-b-bg" form="attr-editor"
-                        asp-page-handler="Push">Create</button>
+                <h3>
+                    You have selected option to add new attribute.<br />
+                    Use fields below and provide information about new attribute.<br />
+                    Add appropriate attribute name and choose group, to which new attribute will be attached.<br />
+                    New products, using attached group, will use this attributes to store external information
+                </h3>
             }
         </div>
+    </div>
+
+    @if (attributeAdded)
+    {
+        <div class="row ai-center">
+            <div class="col-0">
+                <i class="fa fa-info-circle fa-2xl clr-r mx-3"></i>
+            </div>
+
+            <div class="col">
+                <h3>
+                    Attention! Group change is unsafe operation.<br />
+                    Make sure, new group belong to the same category as current group.<br />
+                    Otherwise, some attribute data in related products might become unreadable,
+                    despite on being in database still!
+                </h3>
+            </div>
+        </div>
+    }
+</div>
+
+<div class="container px-5 my-5">
+    <form method="post" autocomplete="off" id="viewer">
+        <div class="field">
+            <input type="password" class="secret" value="@Model.Attribute.Key"
+                   asp-for="Attribute.Key" readonly tabindex="-1" />
+            <input type="password" class="secret" id="a-attachment-s"
+                   asp-for="Attribute.AttachedToGroup" readonly tabindex="-1" />
+        </div>
+
+        <div class="field">
+            <input type="text" class="input" id="a-name" placeholder=" "
+                   asp-for="Attribute.Attribute" />
+            <label class="label" for="a-name">Attribute</label>
+
+            <span asp-validation-for="Attribute.Attribute"></span>
+        </div>
+
+        <div class="field">
+            <input type="text" class="input" id="a-attachment-v"
+                   placeholder=" " readonly tabindex="-1" />
+            <label class="label" for="a-attachment-v">Attached To Group</label>
+
+            <span asp-validation-for="Attribute.AttachedToGroup"></span>
+        </div>
+    </form>
+</div>
+
+<div class="container px-5 my-5">
+    <div class="row jc-center">
+        <div class="col-0 my-1 mx-2 menu" data-component="menu-single"
+             data-rel-text="#a-attachment-v" data-rel-secret="#a-attachment-s">
+            <button type="button" class="button menu-header">
+                <p class="insertable">Choose group</p>
+                <i class="fa fa-angle-down fa-sm"></i>
+            </button>
+            <div class="menu-list">
+                @{
+                    foreach (AttributeGroupRWAdapter group in Model.Groups)
+                    {
+                        if (Model.Attribute.AttachedToGroup == group.Key)
+                        {
+                            <button type="button" class="menu-node" data-node="ss"
+                            data-val="@group.Key" disabled>@group.Group</button>
+                        }
+                        else
+                        {
+                            <button type="button" class="menu-node" data-node="ss"
+                            data-val="@group.Key">@group.Group</button>
+                        }
+                    }
+                }
+            </div>
+        </div>
+
+        <div class="col-0 my-1 mx-2">
+            @if (attributeAdded)
+            {
+                <button class="button" form="viewer"
+                    asp-page-handler="Push">Update</button>
+            }
+            else
+            {
+                <button class="button" form="viewer"
+                    asp-page-handler="Push">Create</button>
+            }
+        </div>
+
+        @if (attributeAdded)
+        {
+            <div class="col-0 my-1 mx-2">
+                <a class="button warning"
+                   href="/maintenance/attribute?aid=@Model.Attribute.Key&handler=drop">Drop</a>
+            </div>
+        }
     </div>
 </div>

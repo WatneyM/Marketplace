@@ -36,19 +36,26 @@ namespace DSL.Services.Implementations
                 .ReadAll());
         }
 
-        public IEnumerable<CategoryRWAdapter> GetAttachableCategories()
+        public IEnumerable<CategoryRAdapter> GetAttachableCategories()
         {
-            return _modelToRWA
-                .Map<IEnumerable<CategoryRWAdapter>>(_manager
+            return _modelToRA
+                .Map<IEnumerable<CategoryRAdapter>>(_manager
                 .ReadAttachables());
         }
 
-        public IEnumerable<CategoryRWAdapter> GetCategoriesExceptKey(string categoryKey)
+        public IEnumerable<CategoryRAdapter> GetPrimaryCategories()
         {
-            return _modelToRWA
-                .Map<IEnumerable<CategoryRWAdapter>>(_manager
-                .ReadAll()
-                .Where(p => p.Key != categoryKey));
+            return _modelToRA
+                .Map<IEnumerable<CategoryRAdapter>>(_manager
+                .ReadPrimaries());
+        }
+
+        public IEnumerable<CategoryRAdapter> GetPrimaryCategories(string exceptKey)
+        {
+            return _modelToRA
+                .Map<IEnumerable<CategoryRAdapter>>(_manager
+                .ReadPrimaries()
+                .Where(p => p.Key != exceptKey));
         }
 
         public IEnumerable<CategoryRAdapter> GetCategoriesAsList()

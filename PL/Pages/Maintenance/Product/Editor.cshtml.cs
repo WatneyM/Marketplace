@@ -19,45 +19,40 @@ namespace PL.Pages.Maintenance.Product
         private readonly ICategoryService _cService = cService;
         private readonly IAttributeGroupService _gService = gService;
 
-        public ProductRWAdapter Product { get; set; } = new();
-        public List<CategoryRWAdapter> Categories { get; set; } = [];
+        public List<CategoryRAdapter> Categories { get; set; } = [];
         public List<AttributeGroupXRAdapter> Groups { get; set; } = [];
+        public ProductRWAdapter Product { get; set; } = new();
         [BindNever]
-        public string? CurrentCategory { get; set; }
+        public CategoryRWAdapter CurrentCategory { get; set; } = new();
 
-        public void OnGet(string category, string product)
+        public void OnGet(string cid, string pid)
         {
-            if (category is null)
-                Categories = _cService.GetAttachableCategories().ToList();
-            else
+            Groups.AddRange(_gService.GetGroupsByCategory(cid));
+            CurrentCategory = _cService.GetCategory(cid);
+
+            Extend();
+
+            if (pid is not null)
             {
-                Groups = _gService.GetGroupsByCategory(category).ToList();
-                CurrentCategory = category;
+                Product = _pService.GetProduct(pid);
 
-                Extend();
-
-                if (product is not null)
-                {
-                    Product = _pService.GetProduct(product);
-
-                    ExtendWithKey();
-                }
+                ExtendWithKey();
             }
         }
 
-        public IActionResult OnGetDrop(string product)
+        public IActionResult OnGetDrop(string cid, string pid)
         {
-            _pService.DropProduct(product);
+            _pService.DropProduct(pid);
 
-            return Redirect("/maintenance/products");
+            return Redirect("/maintenance/products?cid=" + cid);
         }
 
-        public IActionResult OnPostPush()
+        public IActionResult OnPostPush(string cid)
         {
             if (ModelState.IsValid)
                 _pService.PushOrModifyProduct(Product);
 
-            return Redirect("/maintenance/products");
+            return Redirect("/maintenance/products?cid=" + cid);
         }
 
         public void Extend()

@@ -1,18 +1,18 @@
 ﻿class MenuStorage {
-    #activeMenuIdx;
+    #activeIdx;
 
     constructor() {
         this.storage = [];
-        this.#activeMenuIdx = 0;
+        this.#activeIdx = 0;
 
         this.fromStorage = (idx) => { return this.storage[idx]; }
         this.toStorage = (menu) => { this.storage.push(menu); }
 
-        this.swapActiveMenu = (idx) => {
-            if (this.#activeMenuIdx != idx) {
-                this.fromStorage(this.#activeMenuIdx).popout();
+        this.activate = (idx) => {
+            if (this.#activeIdx != idx) {
+                this.fromStorage(this.#activeIdx).popout();
 
-                this.#activeMenuIdx = idx;
+                this.#activeIdx = idx;
             }
         }
     }
@@ -45,7 +45,7 @@ class NSMenu {
             this.popup();
         }
 
-        this.storage.swapActiveMenu(this.#idx);
+        this.storage.activate(this.#idx);
     }
     focusOutEvent(ev) {
         if ($(ev.relatedTarget).parents('.menu').length === 0
@@ -68,7 +68,7 @@ class NSMenu {
         setTimeout(() => {
             this.list.removeClass('d-block');
             this.#active = false;
-        }, 100);
+        }, this.milliseconds(this.list.css('transition-duration')));
     }
 
     setInitialFocus() {
@@ -109,12 +109,19 @@ class NSMenu {
         this.nodes[this.#currentFocus].focusOnNode();
     }
 
+    milliseconds(duration) {
+        return parseFloat(duration) * (/\ds$/.test(duration) ? 1000 : 1);
+    }
+
     includeNodes() {
+        let idxC = 0;
+
         this.list.children().each((idx, item) => {
             let node = $(item);
             switch (node.data('node')) {
                 case 'ns':
-                    this.nodes.push(new NSMenuNode(idx, node, this));
+                    this.nodes.push(new NSMenuNode(idxC, node, this));
+                    idxC++;
                     break;
                 default: return this;
             }
@@ -170,48 +177,6 @@ class SSMenu extends NSMenu {
             switch (node.data('node')) {
                 case 'ss':
                     this.nodes.push(new SSMenuNode(idx, this, node, this.#secret,
-                        this.#target, node.text(), node.data('val')));
-                    break;
-                case 'cs':
-                    this.nodes.push(new CSMenuNode(idx, node, this));
-                default: return this;
-            }
-        });
-
-        return this;
-    }
-}
-class MSMenu extends NSMenu {
-    #target;
-    #secret;
-
-    constructor(idx, root, storage, headerTag, listTag, targetSelector, secretSelector) {
-        super(idx, root, storage, headerTag, listTag);
-
-        this.#target = targetSelector;
-        this.#secret = secretSelector;
-    }
-
-    unselectAll() {
-        let temp = this.nodes.filter(rule => $(rule.node).data('node') === 'ms');
-
-        this.clear();
-        for (var node of temp) {
-            node.unselectNode();
-        }
-    }
-
-    clear() {
-        $(this.#target).val(undefined);
-        $(this.#secret).val(undefined);
-    }
-
-    includeNodes() {
-        this.list.children().each((idx, item) => {
-            let node = $(item);
-            switch (node.data('node')) {
-                case 'ms':
-                    this.nodes.push(new MSMenuNode(idx, this, node, this.#secret,
                         this.#target, node.text(), node.data('val')));
                     break;
                 case 'cs':
@@ -310,47 +275,7 @@ class SSMenuNode extends NSMenuNode {
         this.node.prop('disabled', false);
     }
 }
-class MSMenuNode extends NSMenuNode {
-    #secret;
-    #target;
-    #nodeData;
-    #secretData;
 
-    constructor(idx, menuTag, nodeTag, secretTag, targetTag, nodeData, secretData) {
-        super(idx, nodeTag, menuTag);
-
-        this.#secret = secretTag;
-        this.#target = targetTag;
-        this.#nodeData = nodeData;
-        this.#secretData = secretData;
-        
-        this.node.on('click', () => { this.clickEvent(); });
-
-        if (this.node.prop('disabled')) {
-            this.node.trigger('click');
-        }
-    }
-
-    clickEvent() {
-        this.selectNode();
-        this.node.trigger('focusout');
-    }
-
-    selectNode() {
-        if ($(this.#target).val() === undefined && $(this.#secret) === undefined) {
-            $(this.#target).val(this.#nodeData);
-            $(this.#secret).val(this.#secretData);
-        } else {
-            $(this.#target).val($(this.#target).val() + ' ' + this.#nodeData);
-            $(this.#secret).val($(this.#secret).val() + ' ' + this.#secretData);
-        }
-
-        this.node.prop('disabled', true);
-    }
-    unselectNode() {
-        this.node.prop('disabled', false);
-    }
-}
 class CSMenuNode extends NSMenuNode {
     #menu;
 

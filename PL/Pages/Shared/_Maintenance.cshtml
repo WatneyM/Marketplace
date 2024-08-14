@@ -7,52 +7,90 @@
     <link type="text/css" rel="stylesheet" href="~/styles/global.css" />
     <link type="text/css" rel="stylesheet" href="~/styles/grid.css" />
     <link type="text/css" rel="stylesheet" href="~/styles/font.css" />
-    <link type="text/css" rel="stylesheet" href="~/styles/border.css" />
-
+    <link type="text/css" rel="stylesheet" href="~/styles/heap.css" />
     <link type="text/css" rel="stylesheet" href="~/styles/components/menu.css" />
     <link type="text/css" rel="stylesheet" href="~/styles/components/form.css" />
-
+    <link type="text/css" rel="stylesheet" href="~/styles/components/collapsable.css" />
     <link type="text/css" rel="stylesheet" href="~/lib/font-awesome/css/all.min.css" />
-
-    <title>@ViewData["PageTitle"]</title>
 
     <script src="~/lib/jquery/jquery.min.js"></script>
     <script src="~/lib/jquery-validate/jquery.validate.min.js"></script>
     <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+
+    <title>@ViewData["PageTitle"]</title>
 </head>
 <body>
     <header>
-        <div class="container">
+        <div class="container px-5 my-4">
             <div class="row jc-sb ai-baseline">
                 <div class="col-0">
                     <h1>Marketplace</h1>
                 </div>
                 <div class="col-0">
-                    <div class="row no-wrap">
-                        <div class="col mx-1">
-                            <a class="link" href="/maintenance/categories"><h2>Category</h2></a>
+                    <div class="row no-wrap block-a">
+                        <div class="col mx-3">
+                            <a class="link" href="/maintenance/categories"><h3>Category</h3></a>
                         </div>
-                        <div class="col mx-1">
-                            <a class="link" href="/maintenance/groups"><h2>Groups</h2></a>
+                        <div class="col mx-3">
+                            <a class="link" href="/maintenance/groups"><h3>Groups</h3></a>
                         </div>
-                        <div class="col mx-1">
-                            <a class="link" href="/maintenance/attributes"><h2>Attributes</h2></a>
+                        <div class="col mx-3">
+                            <a class="link" href="/maintenance/attributes"><h3>Attributes</h3></a>
                         </div>
-                        <div class="col mx-1">
-                            <a class="link" href="/maintenance/products"><h2>Products</h2></a>
+                        <div class="col mx-3">
+                            <a class="link" href="/maintenance/products"><h3>Products</h3></a>
+                        </div>
+                        <div class="col mx-3 menu" data-component="menu">
+                            <button type="button" class="link">
+                                <i class="fa fa-user fa-sm"></i>
+                                <h3 class="insertable">Customer</h3>
+                                <i class="fa fa-angle-down fa-sm"></i>
+                            </button>
+
+                            <div class="menu-list">
+                                <a href="/" data-node="ns" class="menu-node">
+                                    <i class="fa fa-arrow-right-to-bracket fa-xs"></i>
+                                    <p class="insertable">Log In</p>
+                                </a>
+                                <a href="/" data-node="ns" class="menu-node">
+                                    <i class="fa fa-arrow-right-from-bracket fa-xs"></i>
+                                    <p class="insertable">Log Out</p>
+                                </a>
+                                <hr />
+                                <a href="/" data-node="ns" class="menu-node">
+                                    <i class="fa fa-home fa-xs"></i>
+                                    <p class="insertable">Start</p>
+                                </a>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="col-2 menu" data-component="menu">
-                    <button type="button" class="button cp-b-t menu-header">
-                        <p class="d-inline">User</p>
-                        <i class="fa fa-angle-down fa-sm"></i>
-                    </button>
-                    <div class="menu-list">
-                        <a href="/" data-node="ns" class="menu-node">Log In</a>
-                        <a href="/" data-node="ns" class="menu-node">Log Out</a>
-                        <hr />
-                        <a href="/" data-node="ns" class="menu-node">Home</a>
+
+                    <div class="row block-b">
+                        <div class="col mx-3 menu" data-component="menu">
+                            <button type="button" class="block">
+                                <i class="fa fa-bars fa-xl"></i>
+                            </button>
+                            <div class="menu-list my-3 ml-r">
+                                <a class="menu-node" data-node="ns" href="/maintenance/categories"><p>Categories</p></a>
+                                <a class="menu-node" data-node="ns" href="/maintenance/groups"><p>Groups</p></a>
+                                <a class="menu-node" data-node="ns" href="/maintenance/attributes"><p>Attributes</p></a>
+                                <a class="menu-node" data-node="ns" href="/maintenance/products"><p>Products</p></a>
+                                <hr />
+                                <a href="/" data-node="ns" class="menu-node">
+                                    <i class="fa fa-arrow-right-to-bracket fa-xs"></i>
+                                    <p class="insertable">Log In</p>
+                                </a>
+                                <a href="/" data-node="ns" class="menu-node">
+                                    <i class="fa fa-arrow-right-from-bracket fa-xs"></i>
+                                    <p class="insertable">Log Out</p>
+                                </a>
+                                <hr />
+                                <a href="/" data-node="ns" class="menu-node">
+                                    <i class="fa fa-home fa-xs"></i>
+                                    <p class="insertable">Start</p>
+                                </a>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -61,10 +99,9 @@
 
     <main>@RenderBody()</main>
 
-    <footer></footer>
-
     <script src="~/scripts/components/menu.js"></script>
     <script src="~/scripts/components/loader.js"></script>
+    <script src="~/scripts/components/collapsable.js"></script>
     <script src="~/scripts/init.js"></script>
 </body>
 </html>

@@ -11,11 +11,13 @@ namespace PL.Pages.Maintenance.Category
     {
         private readonly ICategoryService _service = service;
 
-        public List<CategoryRAdapter> Categories { get; set; } = [];
+        public List<CategoryRAdapter> Primaries { get; set; } = [];
+        public List<CategoryRAdapter> Attached { get; set; } = [];
 
         public void OnGet()
         {
-            Categories = _service.GetCategoriesAsList().ToList();
+            Primaries.AddRange(_service.GetPrimaryCategories());
+            Attached.AddRange(_service.GetAttachableCategories());
         }
     }
 }

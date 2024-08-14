@@ -1,0 +1,89 @@
+﻿@page "{pid}"
+@model PL.Pages.Client.ViewModel
+@{
+    ViewData["PageTitle"] = Model.Product.Product;
+    Layout = "_Marketplace";
+}
+
+@using DSL.Adapters.Attribute
+@using DSL.Adapters.Group
+
+<div class="container px-5 py-5">
+    <div class="row ai-center">
+        <div class="col ta-center">
+            <img class="img-md" src="@Model.Product.Image" alt="@Model.Product.Product" />
+        </div>
+        <div class="col">
+            <div class="row my-3">
+                <div class="col">
+                    <h2 class="wrappable">@Model.Product.Product</h2>
+                </div>
+            </div>
+
+            <div class="row my-3 ai-center">
+                <div class="col">
+                    <p class="wrappable">Order Status: <strong class="clr-r">In Development</strong></p>
+                </div>
+                <div class="col my-3 ta-end">
+                    <p class="wrappable">@Model.Product.Price<i class="fa fa-hryvnia fa-xs"></i></p>
+                </div>
+            </div>
+
+            <div class="row my-3">
+                <div class="col ta-center">
+                    <button class="button"><i class="fa fa-cart-shopping fa-xs"></i>Add To Cart</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container px-5 my-5">
+    <div class="row my-3 px-5">
+        <div class="col">
+            <h2><i class="fa fa-pen fa-xs px-1 pl-0"></i>Description</h2>
+        </div>
+    </div>
+
+    <div class="row my-3">
+        <div class="col">
+            <p>@Model.Product.LongDescription</p>
+        </div>
+    </div>
+</div>
+
+<div class="container px-5 my-5">
+    <div class="row my-3 px-5">
+        <div class="col">
+            <h2><i class="fa fa-pen fa-xs px-1 pl-0"></i>Characteristics</h2>
+        </div>
+    </div>
+
+    @foreach (AttributeGroupXRAdapter group in Model.Groups)
+    {
+        <div class="row">
+            <div class="col">
+                @foreach (ProductAttributeXRWAdapter _attribute in group.AttachedAttributes)
+                {
+                    <div class="row g-1 my-1 ai-center">
+                        <div class="col">
+                            <h3>@_attribute.Attribute</h3>
+                        </div>
+
+                        <div class="col">
+                            <p>@Model.Product.AttachedValues.Find(p => p.AttachedToAttribute == _attribute.Key)!.Value</p>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <hr class="my-3" />
+
+        <div class="row my-3 mt-0">
+            <div class="col">
+                <h3 class="ta-end">@group.Group</h3>
+            </div>
+        </div>
+    }
+</div>

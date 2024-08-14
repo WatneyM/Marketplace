@@ -1,77 +1,131 @@
-﻿@page "{category?}"
+﻿@page "{cid?}"
 @model PL.Pages.Maintenance.Category.EditorModel
 @{
-    Layout = "_Maintenance";
-    ViewData["PageTitle"] = "Category Editor";
+    bool categoryAdded = Request.Query.ContainsKey("cid")
+    && Request.Query["cid"] != "";
 
-    bool updateEntity = Request.Query.ContainsKey("category") && Request.Query["category"] != "";
+    @if (categoryAdded)
+    {
+        ViewData["PageTitle"] = "View - " + Model.Category.Category;
+    }
+    else
+    {
+        ViewData["PageTitle"] = "New Category";
+    }
+
+    Layout = "_Maintenance";
 }
 
 @using DSL.Adapters.Category
 
-<div class="container cp-b px-4 py-5 my-5">
-    <div class="row">
-        <div class="col ta-center">
-            <form method="post" autocomplete="off" spellcheck="false" id="ctg-editor">
-                <div class="form-record">
-                    <input type="password" class="secret" value="@Model.Category.Key"
-                           asp-for="Category.Key" readonly tabindex="-1" />
-                    <input type="password" class="secret" id="ctg-secret"
-                           asp-for="Category.AttachedToCategory" readonly tabindex="-1" />
-                </div>
+<div class="container px-5 my-5">
+    <div class="row ai-center">
+        <div class="col-0">
+            <i class="fa fa-info-circle fa-2xl clr-g mx-3"></i>
+        </div>
 
-                <div class="form-record">
-                    <label class="label" for="ctg-name">Category</label>
-                    <input type="text" class="input" id="ctg-name" placeholder=" "
-                           asp-for="Category.Category" />
-
-                    <span asp-validation-for="Category.Category"></span>
-                </div>
-
-                <div class="row form-record">
-                    <div class="col">
-                        <label class="label" for="ctg-ancestor">Ancestor</label>
-                        <input type="text" class="input" id="ctg-ancestor"
-                               placeholder=" " readonly tabindex="-1" />
-                    </div>
-                    <div class="col-3 mx-3 menu" data-component="menu-single"
-                         data-rel-text="#ctg-ancestor" data-rel-secret="#ctg-secret">
-                        <button type="button" class="button cp-b-bg menu-header">
-                            <p class="d-inline">Select category</p>
-                            <i class="fa fa-angle-down fa-sm"></i>
-                        </button>
-                        <div class="menu-list">
-                            @foreach (CategoryRWAdapter category in Model.Categories)
-                            {
-                                if (Model.Category.AttachedToCategory is not null
-                                && Model.Category.AttachedToCategory == category.Key)
-                                {
-                                    <button type="button" class="menu-node" data-node="ss"
-                                            data-val="@category.Key" disabled>@category.Category</button>
-                                }
-                                else
-                                {
-                                    <button type="button" class="menu-node" data-node="ss"
-                                            data-val="@category.Key">@category.Category</button>
-                                }
-                            }
-                            <hr />
-                            <button type="button" class="menu-node menu-reset"
-                                    data-node="cs">CLEAR</button>
-                        </div>
-                    </div>
-                </div>
-            </form>
-            @if (updateEntity)
+        <div class="col">
+            @if (categoryAdded)
             {
-                <button class="button cp-b-bg" form="ctg-editor"
-                        asp-page-handler="Push">Update</button>
+                <h3>
+                    You have selected [@Model.Category.Category] category.<br />
+                    Review, or update information about category, if neccesary
+                </h3>
             }
             else
             {
-                <button class="button cp-b-bg" form="ctg-editor"
-                        asp-page-handler="Push">Create</button>
+                <h3>
+                    You have selected option to add new category.<br />
+                    Use fields below and provide information about new category.<br />
+                    Add appropriate category name and choose category, to which new category will be attached.
+                </h3>
             }
         </div>
+    </div>
+</div>
+
+<div class="container px-5 my-5">
+    <form method="post" autocomplete="off" id="viewer">
+        <div class="field">
+            <input type="password" class="secret" value="@Model.Category.Key"
+                   asp-for="Category.Key" readonly tabindex="-1" />
+            <input type="password" class="secret" id="c-attachment-s"
+                   asp-for="Category.AttachedToCategory" readonly tabindex="-1" />
+        </div>
+
+        <div class="field">
+            <input type="text" class="input" id="c-name" placeholder=" "
+                   asp-for="Category.Category" />
+            <label class="label" for="c-name">Category</label>
+
+            <span asp-validation-for="Category.Category"></span>
+        </div>
+
+        <div class="field">
+            <input type="text" class="input" id="c-desc" placeholder=" "
+                   asp-for="Category.Description" />
+            <label class="label" for="c-desc">Description</label>
+
+            <span asp-validation-for="Category.Description"></span>
+        </div>
+
+        <div class="field">
+            <input type="text" class="input" id="c-attachment-v"
+                   placeholder=" " readonly tabindex="-1" />
+            <label class="label" for="c-attachment-v">Attached To Category</label>
+        </div>
+    </form>
+</div>
+
+<div class="container px-5 my-5">
+    <div class="row jc-center">
+        <div class="col-0 my-1 mx-2 menu" data-component="menu-single"
+             data-rel-text="#c-attachment-v" data-rel-secret="#c-attachment-s">
+            <button type="button" class="button">
+                <p class="insertable">Choose category</p>
+                <i class="fa fa-angle-down fa-sm"></i>
+            </button>
+
+            <div class="menu-list">
+                @foreach (CategoryRAdapter category in Model.Categories)
+                {
+                    if (Model.Category.AttachedToCategory == category.Key)
+                    {
+                        <button type="button" class="menu-node" data-node="ss"
+                        data-val="@category.Key" disabled>@category.Category</button>
+                    }
+                    else
+                    {
+                        <button type="button" class="menu-node" data-node="ss"
+                        data-val="@category.Key">@category.Category</button>
+                    }
+                }
+
+                <hr />
+                <button type="button" class="menu-node menu-reset"
+                data-node="cs">Mark As Primary</button>
+            </div>
+        </div>
+
+        <div class="col-0 my-1 mx-2">
+            @if (categoryAdded)
+            {
+                <button class="button" form="viewer"
+                    asp-page-handler="Push">Update</button>
+            }
+            else
+            {
+                <button class="button" form="viewer"
+                    asp-page-handler="Push">Create</button>
+            }
+        </div>
+
+        @if (categoryAdded)
+        {
+            <div class="col-0 my-1 mx-2">
+                <a class="button warning"
+                   href="/maintenance/category?cid=@Model.Category.Key&handler=drop">Drop</a>
+            </div>
+        }
     </div>
 </div>

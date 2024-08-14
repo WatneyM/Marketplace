@@ -28,10 +28,32 @@ namespace DSL.Services.Implementations
         private readonly Mapper _modelToRA = new(new MapperConfiguration(cfg
             => cfg.CreateMap<ProductModel, ProductRAdapter>()));
 
+        public int GetCount()
+        {
+            return _manager.Count();
+        }
+
+        public int GetCountOfCategory(string categoryKey)
+        {
+            return _manager.Count(categoryKey);
+        }
+
         public ProductRWAdapter GetProduct(string productKey)
         {
             return _modelToRWA
                 .Map<ProductRWAdapter>(_manager.Read(productKey));
+        }
+
+        public ProductRAdapter GetProductOfCategory(string categoryKey)
+        {
+            return _modelToRA.Map<ProductRAdapter>(_manager
+                .ReadProductOfCategory(categoryKey));
+        }
+
+        public IEnumerable<ProductRAdapter> GetProductsOfCategory(string categoryKey)
+        {
+            return _modelToRA.Map<IEnumerable<ProductRAdapter>>(_manager
+                .ReadProductsOfCategory(categoryKey));
         }
 
         public IEnumerable<ProductRAdapter> GetProductsAsList()

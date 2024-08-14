@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 using DSL.Adapters.Attribute;
+using DSL.Adapters.Group;
 using DSL.Services.Declarations;
 
 namespace PL.Pages.Maintenance.Attribute
@@ -14,10 +15,12 @@ namespace PL.Pages.Maintenance.Attribute
         private readonly IAttributeGroupService _gService = gService;
 
         public List<AttributeRAdapter> Attributes { get; set; } = [];
+        public List<AttributeGroupRAdapter> Groups { get; set; } = [];
 
         public void OnGet()
         {
-            Attributes = _aService.GetAttributesAsList().ToList();
+            Attributes.AddRange(_aService.GetAttributesAsList());
+            Groups.AddRange(_gService.GetGroupsAsList());
         }
     }
 }

@@ -1,20 +1,26 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-using DSL.Adapters.Category;
+using DSL.Adapters.Product;
 using DSL.Services.Declarations;
+using DSL.Adapters.Category;
 
 namespace PL.Pages.Client
 {
-    public class CatalogModel(ICategoryService service) : PageModel
+    [BindProperties]
+    public class ListModel(IProductService pService,
+        ICategoryService cService) : PageModel
     {
-        private readonly ICategoryService _service = service;
+        private readonly IProductService _pService = pService;
+        private readonly ICategoryService _cService = cService;
 
-        public List<CategoryRAdapter> Categories { get; set; } = [];
+        public List<ProductRAdapter> Products { get; set; } = [];
+        public CategoryRWAdapter Category { get; set; } = new ();
 
-        public void OnGet()
+        public void OnGet(string cid)
         {
-            Categories.AddRange(_service.GetCategoriesAsList());
+            Products.AddRange(_pService.GetProductsOfCategory(cid));
+            Category = _cService.GetCategory(cid);
         }
     }
 }

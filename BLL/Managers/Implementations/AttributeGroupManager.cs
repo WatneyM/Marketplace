@@ -1,8 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
+using BLL.Managers.Declarations;
+
 using DAL;
 using DAL.Models;
-using BLL.Managers.Declarations;
 
 namespace BLL.Managers.Implementations
 {
@@ -12,6 +13,11 @@ namespace BLL.Managers.Implementations
         private readonly ApplicationContext _context = context;
         private readonly DbSet<AttributeGroupModel> _set = context
             .Set<AttributeGroupModel>();
+
+        public int Count()
+        {
+            return _set.Count();
+        }
 
         public bool Has(string dbKey)
         {

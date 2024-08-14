@@ -17,17 +17,17 @@ namespace PL.Pages.Maintenance.Attribute
         public AttributeRWAdapter Attribute { get; set; } = new();
         public List<AttributeGroupRWAdapter> Groups { get; set; } = [];
 
-        public void OnGet(string attribute)
+        public void OnGet(string aid)
         {
-            if (attribute is not null)
-                Attribute = _aService.GetAttribute(attribute);
+            if (aid is not null)
+                Attribute = _aService.GetAttribute(aid);
 
-            Groups = _gService.GetGroups().ToList();
+            Groups.AddRange(_gService.GetGroups());
         }
 
-        public IActionResult OnGetDrop(string attribute)
+        public IActionResult OnGetDrop(string aid)
         {
-            _aService.DropAttribute(attribute);
+            _aService.DropAttribute(aid);
 
             return Redirect("/maintenance/attributes");
         }
