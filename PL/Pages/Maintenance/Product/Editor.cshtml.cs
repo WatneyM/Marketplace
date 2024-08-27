@@ -1,15 +1,17 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-using DSL.Adapters.Attribute;
-using DSL.Adapters.Category;
-using DSL.Adapters.Group;
-using DSL.Adapters.Product;
+using DSL.Adapters.Maintenance.Attribute;
+using DSL.Adapters.Maintenance.Category;
+using DSL.Adapters.Maintenance.Group;
+using DSL.Adapters.Maintenance.Product;
 using DSL.Services.Declarations;
 
 namespace PL.Pages.Maintenance.Product
 {
+    [Authorize(Roles = "Administrator")]
     [BindProperties]
     public class EditorModel(IProductService pService,
         ICategoryService cService,
@@ -25,34 +27,45 @@ namespace PL.Pages.Maintenance.Product
         [BindNever]
         public CategoryRWAdapter CurrentCategory { get; set; } = new();
 
-        public void OnGet(string cid, string pid)
+        public bool KeyChecked { get; set; } = true;
+
+        public void OnGet(string ckey, string pkey)
         {
-            Groups.AddRange(_gService.GetGroupsByCategory(cid));
-            CurrentCategory = _cService.GetCategory(cid);
-
-            Extend();
-
-            if (pid is not null)
+            if (pkey is null)
             {
-                Product = _pService.GetProduct(pid);
+                Groups.AddRange(_gService.GetGroupsByCategory(ckey));
+                CurrentCategory = _cService.GetCategory(ckey);
+
+                Extend();
+            }
+            else if (_pService.KeyCheck(pkey))
+            {
+                Groups.AddRange(_gService.GetGroupsByCategory(ckey));
+                Product = _pService.GetProduct(pkey);
+
+                CurrentCategory = _cService.GetCategory(ckey);
 
                 ExtendWithKey();
             }
+            else
+            {
+                KeyChecked = !KeyChecked;
+            }
         }
 
-        public IActionResult OnGetDrop(string cid, string pid)
+        public IActionResult OnGetDrop(string ckey, string pkey)
         {
-            _pService.DropProduct(pid);
+            _pService.DropProduct(pkey);
 
-            return Redirect("/maintenance/products?cid=" + cid);
+            return Redirect("/maintenance/products/" + ckey);
         }
 
-        public IActionResult OnPostPush(string cid)
+        public IActionResult OnPostPush(string ckey)
         {
             if (ModelState.IsValid)
                 _pService.PushOrModifyProduct(Product);
 
-            return Redirect("/maintenance/products?cid=" + cid);
+            return Redirect("/maintenance/products/" + ckey);
         }
 
         public void Extend()
@@ -70,13 +83,13 @@ namespace PL.Pages.Maintenance.Product
         {
             foreach (AttributeGroupXRAdapter group in Groups)
             {
-                foreach (ProductAttributeXRWAdapter attr in group.AttachedAttributes)
+                foreach (ProductAttributeXRWAdapter attribute in group.AttachedAttributes)
                 {
                     if (!Product.AttachedValues
-                        .Any(p => p.AttachedToAttribute == attr.Key))
+                        .Any(p => p.AttachedToAttribute == attribute.Key))
                     {
                         Product.AttachedValues
-                            .Add(new() { AttachedToAttribute = attr.Key });
+                            .Add(new() { AttachedToAttribute = attribute.Key });
                     }
                 }
             }

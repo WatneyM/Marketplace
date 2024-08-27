@@ -1,6 +1,6 @@
-﻿using DSL.Adapters.Attribute;
+﻿using DSL.Adapters.Maintenance.Attribute;
 
-namespace DSL.Adapters.Group
+namespace DSL.Adapters.Maintenance.Group
 {
     public class AttributeGroupXRAdapter
     {

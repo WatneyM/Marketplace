@@ -5,8 +5,8 @@
     Layout = "_Maintenance";
 }
 
-@using DSL.Adapters.Attribute
-@using DSL.Adapters.Group
+@using DSL.Adapters.Maintenance.Attribute
+@using DSL.Adapters.Maintenance.Group
 
 <div class="container px-5 my-5">
     <div class="row ai-center">
@@ -38,12 +38,18 @@
         @foreach (AttributeGroupRAdapter group in Model.Groups)
         {
             List<AttributeRAdapter> attached = Model.Attributes
-            .FindAll(p => p.AttachedToGroup == group.Group);
+            .FindAll(p => p.AttachedToGroup == group.Key);
 
             <div class="card my-5 p-3">
                 <div class="row px-3">
                     <div class="col ta-center">
                         <h2>@group.Group</h2>
+                    </div>
+                </div>
+
+                <div class="row px-3 my-3">
+                    <div class="col ta-end">
+                        <p>@Model.Categories.Find(p => p.Key == group.AttachedToCategory)!.Category</p>
                     </div>
                 </div>
 
@@ -72,7 +78,7 @@
 
                                     <div class="row my-3 jc-end">
                                         <div class="col-0">
-                                            <a class="button" href="/maintenance/attribute?aid=@attachedAttr.Key">
+                                            <a class="button" href="/maintenance/attribute/@attachedAttr.Key">
                                                 <i class="fa fa-pen fa-sm"></i>
                                                 <p class="insertable">View</p>
                                             </a>

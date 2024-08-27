@@ -1,12 +1,14 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-using DSL.Adapters.Product;
+using DSL.Adapters.Maintenance.Category;
+using DSL.Adapters.Maintenance.Product;
 using DSL.Services.Declarations;
-using DSL.Adapters.Category;
 
 namespace PL.Pages.Maintenance.Product
 {
+    [Authorize(Roles = "Administrator")]
     [BindProperties]
     public class ListModel(IProductService pService,
         ICategoryService cService) : PageModel
@@ -20,13 +22,13 @@ namespace PL.Pages.Maintenance.Product
         public string? CurrentCategory { get; set; }
         public int ProductsCount { get; set; }
 
-        public void OnGet(string cid)
+        public void OnGet(string key)
         {
-            if (cid is not null)
+            if (key is not null)
             {
-                Products.AddRange(_pService.GetProductsOfCategory(cid));
+                Products.AddRange(_pService.GetProductsOfCategory(key));
 
-                CurrentCategory = cid;
+                CurrentCategory = key;
             }
 
             ProductsCount = _pService.GetCount();

@@ -1,11 +1,11 @@
-﻿@page "{cid}"
+﻿@page "{key}"
 @model PL.Pages.Client.ListModel
 @{
     ViewData["PageTitle"] = "View Products";
     Layout = "_Marketplace";
 }
 
-@using DSL.Adapters.Product
+@using DSL.Adapters.Maintenance.Product
 
 <div class="container px-5 my-5">
     <div class="row ai-center">
@@ -65,7 +65,7 @@
                         </div>
 
                         <div class="col-0 my-1 mx-3">
-                            <a class="button" href="/product?pid=@product.Key">View Product</a>
+                            <a class="button" href="/product/@product.Key">View Product</a>
                         </div>
                     </div>
                 </div>

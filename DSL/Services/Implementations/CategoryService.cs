@@ -5,7 +5,7 @@ using BLL.Managers.Declarations;
 using DAL.Models;
 
 using DSL.Services.Declarations;
-using DSL.Adapters.Category;
+using DSL.Adapters.Maintenance.Category;
 
 namespace DSL.Services.Implementations
 {
@@ -21,6 +21,8 @@ namespace DSL.Services.Implementations
             => cfg.CreateMap<CategoryModel, CategoryRWAdapter>()));
         private readonly Mapper _modelToRA = new(new MapperConfiguration(cfg
             => cfg.CreateMap<CategoryModel, CategoryRAdapter>()));
+
+        public bool KeyCheck(string key) => _manager.Has(key);
 
         public CategoryRWAdapter GetCategory(string categoryKey)
         {

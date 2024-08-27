@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace DSL.Adapters.Category
+namespace DSL.Adapters.Maintenance.Category
 {
     public class CategoryRWAdapter
     {

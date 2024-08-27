@@ -21,7 +21,7 @@
 </head>
 <body>
     <header>
-        <div class="container px-5 my-4">
+        <div class="container p-4">
             <div class="row jc-sb ai-baseline">
                 <div class="col-0">
                     <h1>Marketplace</h1>
@@ -48,14 +48,20 @@
                             </button>
 
                             <div class="menu-list">
-                                <a href="/" data-node="ns" class="menu-node">
-                                    <i class="fa fa-arrow-right-to-bracket fa-xs"></i>
-                                    <p class="insertable">Log In</p>
-                                </a>
-                                <a href="/" data-node="ns" class="menu-node">
-                                    <i class="fa fa-arrow-right-from-bracket fa-xs"></i>
-                                    <p class="insertable">Log Out</p>
-                                </a>
+                                @if (!User.Identity!.IsAuthenticated)
+                                {
+                                    <a href="/authentication" data-node="ns" class="menu-node">
+                                        <i class="fa fa-arrow-right-to-bracket fa-xs"></i>
+                                        <p class="insertable">Sign In</p>
+                                    </a>
+                                }
+                                else
+                                {
+                                    <a href="/authentication?handler=SignOut" data-node="ns" class="menu-node">
+                                        <i class="fa fa-arrow-right-from-bracket fa-xs"></i>
+                                        <p class="insertable">Sign Out</p>
+                                    </a>
+                                }
                                 <hr />
                                 <a href="/" data-node="ns" class="menu-node">
                                     <i class="fa fa-home fa-xs"></i>
@@ -76,14 +82,20 @@
                                 <a class="menu-node" data-node="ns" href="/maintenance/attributes"><p>Attributes</p></a>
                                 <a class="menu-node" data-node="ns" href="/maintenance/products"><p>Products</p></a>
                                 <hr />
-                                <a href="/" data-node="ns" class="menu-node">
-                                    <i class="fa fa-arrow-right-to-bracket fa-xs"></i>
-                                    <p class="insertable">Log In</p>
-                                </a>
-                                <a href="/" data-node="ns" class="menu-node">
-                                    <i class="fa fa-arrow-right-from-bracket fa-xs"></i>
-                                    <p class="insertable">Log Out</p>
-                                </a>
+                                @if (!User.Identity!.IsAuthenticated)
+                                {
+                                    <a href="/authentication" data-node="ns" class="menu-node">
+                                        <i class="fa fa-arrow-right-to-bracket fa-xs"></i>
+                                        <p class="insertable">Sign In</p>
+                                    </a>
+                                }
+                                else
+                                {
+                                    <a href="/authentication?handler=SignOut" data-node="ns" class="menu-node">
+                                        <i class="fa fa-arrow-right-from-bracket fa-xs"></i>
+                                        <p class="insertable">Sign Out</p>
+                                    </a>
+                                }
                                 <hr />
                                 <a href="/" data-node="ns" class="menu-node">
                                     <i class="fa fa-home fa-xs"></i>

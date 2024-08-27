@@ -11,7 +11,9 @@
     --clr-orange: #c29c00;
     --clr-black: #000000;
 
-    --m-width: 24rem;
+    --min-sm: 24rem;
+    --min-md: 28rem;
+    --min-lg: 30rem;
 
     --w: .15rem;
     --a: 1rem;
@@ -42,9 +44,9 @@ html {
 
 body {
     background: var(--clr-bg);
-    margin: 2rem auto 5rem auto;
     width: 100%;
     overflow-x: hidden;
+    min-height: 100vh;
 }
 
 a {

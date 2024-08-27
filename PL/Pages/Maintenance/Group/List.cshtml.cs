@@ -1,12 +1,14 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-using DSL.Adapters.Group;
+using DSL.Adapters.Maintenance.Category;
+using DSL.Adapters.Maintenance.Group;
 using DSL.Services.Declarations;
-using DSL.Adapters.Category;
 
 namespace PL.Pages.Maintenance.Group
 {
+    [Authorize(Roles = "Administrator")]
     [BindProperties]
     public class ListModel(IAttributeGroupService gService,
         ICategoryService cService) : PageModel

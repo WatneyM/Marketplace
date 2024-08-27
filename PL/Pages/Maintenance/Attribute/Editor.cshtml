@@ -1,141 +1,167 @@
-﻿@page "{aid?}"
+﻿@page "{key?}"
 @model PL.Pages.Maintenance.Attribute.EditorModel
 @{
-    bool attributeAdded = Request.Query.ContainsKey("aid")
-    && Request.Query["aid"] != "";
+    bool attributeAdded = Request.RouteValues["key"] != null;
 
-    @if (attributeAdded)
+    @if (Model.KeyChecked)
     {
-        ViewData["PageTitle"] = "View - " + Model.Attribute.Attribute;
+        if (attributeAdded)
+        {
+            ViewData["PageTitle"] = "View - " + Model.Attribute.Attribute;
+        }
+        else
+        {
+            ViewData["PageTitle"] = "New Attribute";
+        }
     }
     else
     {
-        ViewData["PageTitle"] = "New Attribute";
+        ViewData["PageTitle"] = "Attribute Not Found";
     }
 
     Layout = "_Maintenance";
 }
 
-@using DSL.Adapters.Group
+@using DSL.Adapters.Maintenance.Group
 
-<div class="container px-5 my-5">
-    <div class="row ai-center my-5">
-        <div class="col-0">
-            <i class="fa fa-info-circle fa-2xl clr-g mx-3"></i>
-        </div>
-
-        <div class="col">
-            @if (attributeAdded)
-            {
-                <h3>
-                    You have selected [@Model.Attribute.Attribute] attribute.<br />
-                    Review, or update information about attribute, if neccesary
-                </h3>
-            }
-            else
-            {
-                <h3>
-                    You have selected option to add new attribute.<br />
-                    Use fields below and provide information about new attribute.<br />
-                    Add appropriate attribute name and choose group, to which new attribute will be attached.<br />
-                    New products, using attached group, will use this attributes to store external information
-                </h3>
-            }
-        </div>
-    </div>
-
-    @if (attributeAdded)
-    {
-        <div class="row ai-center">
+@if (Model.KeyChecked)
+{
+    <div class="container px-4 my-5">
+        <div class="row ai-center my-5">
             <div class="col-0">
-                <i class="fa fa-info-circle fa-2xl clr-r mx-3"></i>
+                <i class="fa fa-info-circle fa-2xl clr-g mx-3"></i>
             </div>
 
             <div class="col">
-                <h3>
-                    Attention! Group change is unsafe operation.<br />
-                    Make sure, new group belong to the same category as current group.<br />
-                    Otherwise, some attribute data in related products might become unreadable,
-                    despite on being in database still!
-                </h3>
-            </div>
-        </div>
-    }
-</div>
-
-<div class="container px-5 my-5">
-    <form method="post" autocomplete="off" id="viewer">
-        <div class="field">
-            <input type="password" class="secret" value="@Model.Attribute.Key"
-                   asp-for="Attribute.Key" readonly tabindex="-1" />
-            <input type="password" class="secret" id="a-attachment-s"
-                   asp-for="Attribute.AttachedToGroup" readonly tabindex="-1" />
-        </div>
-
-        <div class="field">
-            <input type="text" class="input" id="a-name" placeholder=" "
-                   asp-for="Attribute.Attribute" />
-            <label class="label" for="a-name">Attribute</label>
-
-            <span asp-validation-for="Attribute.Attribute"></span>
-        </div>
-
-        <div class="field">
-            <input type="text" class="input" id="a-attachment-v"
-                   placeholder=" " readonly tabindex="-1" />
-            <label class="label" for="a-attachment-v">Attached To Group</label>
-
-            <span asp-validation-for="Attribute.AttachedToGroup"></span>
-        </div>
-    </form>
-</div>
-
-<div class="container px-5 my-5">
-    <div class="row jc-center">
-        <div class="col-0 my-1 mx-2 menu" data-component="menu-single"
-             data-rel-text="#a-attachment-v" data-rel-secret="#a-attachment-s">
-            <button type="button" class="button menu-header">
-                <p class="insertable">Choose group</p>
-                <i class="fa fa-angle-down fa-sm"></i>
-            </button>
-            <div class="menu-list">
-                @{
-                    foreach (AttributeGroupRWAdapter group in Model.Groups)
-                    {
-                        if (Model.Attribute.AttachedToGroup == group.Key)
-                        {
-                            <button type="button" class="menu-node" data-node="ss"
-                            data-val="@group.Key" disabled>@group.Group</button>
-                        }
-                        else
-                        {
-                            <button type="button" class="menu-node" data-node="ss"
-                            data-val="@group.Key">@group.Group</button>
-                        }
-                    }
+                @if (attributeAdded)
+                {
+                    <h3>
+                        You have selected [@Model.Attribute.Attribute] attribute.<br />
+                        Review, or update information about attribute, if neccesary
+                    </h3>
+                }
+                else
+                {
+                    <h3>
+                        You have selected option to add new attribute.<br />
+                        Use fields below and provide information about new attribute.<br />
+                        Add appropriate attribute name and choose group, to which new attribute will be attached.<br />
+                        New products, using attached group, will use this attributes to store external information
+                    </h3>
                 }
             </div>
         </div>
 
-        <div class="col-0 my-1 mx-2">
-            @if (attributeAdded)
-            {
-                <button class="button" form="viewer"
-                    asp-page-handler="Push">Update</button>
-            }
-            else
-            {
-                <button class="button" form="viewer"
-                    asp-page-handler="Push">Create</button>
-            }
-        </div>
-
         @if (attributeAdded)
         {
-            <div class="col-0 my-1 mx-2">
-                <a class="button warning"
-                   href="/maintenance/attribute?aid=@Model.Attribute.Key&handler=drop">Drop</a>
+            <div class="row ai-center">
+                <div class="col-0">
+                    <i class="fa fa-info-circle fa-2xl clr-r mx-3"></i>
+                </div>
+
+                <div class="col">
+                    <h3>
+                        Attention! Group change is unsafe operation.<br />
+                        Make sure, new group belong to the same category as current group.<br />
+                        Otherwise, some attribute data in related products might become unreadable,
+                        despite on being in database still!
+                    </h3>
+                </div>
             </div>
         }
     </div>
+
+    <div class="container px-4 my-5">
+        <form method="post" autocomplete="off" id="viewer">
+            <div class="field">
+                <input type="password" class="secret" value="@Model.Attribute.Key"
+                       asp-for="Attribute.Key" readonly tabindex="-1" />
+                <input type="password" class="secret" id="a-attachment-s"
+                       asp-for="Attribute.AttachedToGroup" readonly tabindex="-1" />
+            </div>
+
+            <div class="field">
+                <input type="text" class="input" id="a-name" placeholder=" "
+                       asp-for="Attribute.Attribute" />
+                <label class="label" for="a-name">Attribute</label>
+
+                <span asp-validation-for="Attribute.Attribute"></span>
+            </div>
+
+            <div class="field">
+                <input type="text" class="input" id="a-attachment-v"
+                       placeholder=" " readonly tabindex="-1" />
+                <label class="label" for="a-attachment-v">Attached To Group</label>
+
+                <span asp-validation-for="Attribute.AttachedToGroup"></span>
+            </div>
+        </form>
+    </div>
+
+    <div class="container px-4 my-5">
+        <div class="row jc-center">
+            <div class="col-0 my-1 mx-2 menu" data-component="menu-single"
+                 data-rel-text="#a-attachment-v" data-rel-secret="#a-attachment-s">
+                <button type="button" class="button menu-header">
+                    <p class="insertable">Choose group</p>
+                    <i class="fa fa-angle-down fa-sm"></i>
+                </button>
+                <div class="menu-list">
+                    @{
+                        foreach (AttributeGroupRWAdapter group in Model.Groups)
+                        {
+                            if (Model.Attribute.AttachedToGroup == group.Key)
+                            {
+                                <button type="button" class="menu-node" data-node="ss"
+                                    data-val="@group.Key" disabled>@group.Group (@Model.Categories.Find(p => p.Key == group.AttachedToCategory)!.Category)</button>
+                            }
+                            else
+                            {
+                                <button type="button" class="menu-node" data-node="ss"
+                                    data-val="@group.Key">@group.Group (@Model.Categories.Find(p => p.Key == group.AttachedToCategory)!.Category)</button>
+                            }
+                        }
+                    }
+                </div>
+            </div>
+
+            <div class="col-0 my-1 mx-2">
+                @if (attributeAdded)
+                {
+                    <button class="button" form="viewer"
+                        asp-page-handler="Push">Update</button>
+                }
+                else
+                {
+                    <button class="button" form="viewer"
+                        asp-page-handler="Push">Create</button>
+                }
+            </div>
+
+            @if (attributeAdded)
+            {
+                <div class="col-0 my-1 mx-2">
+                    <a class="button warning"
+                       href="/maintenance/attribute/@Model.Attribute.Key?handler=Drop">Drop</a>
+                </div>
+            }
+        </div>
+    </div>
+}
+else
+{
+<div class="display-centered">
+    <div class="container px-4 py-5 my-5">
+        <div class="row">
+            <div class="col ta-center">
+                <h3>No record for requested key was found</h3>
+            </div>
+        </div>
+        <div class="row jc-center my-3  ">
+            <div class="col-0">
+                <a class="button" href="/maintenance/attributes">Go back</a>
+            </div>
+        </div>
+    </div>
 </div>
+}

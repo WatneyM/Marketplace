@@ -1,6 +1,7 @@
 ﻿.field {
     margin: 2rem 0;
     position: relative;
+    text-align: end;
 }
 
 .label {
@@ -36,7 +37,7 @@ input[type="file"]:focus + .img-label,
     border: .2rem solid var(--clr-dark-grey);
     border-radius: .5rem;
     height: 4rem;
-    min-width: var(--m-width);
+    min-width: var(--min-sm);
     outline: none;
     padding: 0 1rem;
     width: 100%;

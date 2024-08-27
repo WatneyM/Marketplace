@@ -12,12 +12,12 @@ $(() => {
 
 let disableScrollOnMenuKeyAction = () => {
     window.addEventListener('keydown', (ev) => {
-        if ($(ev.target).hasClass('menu-node')) {
+        if ($(ev.target).hasClass('menu-node') && ev.key === 'ArrowDown') {
             ev.preventDefault();
         }
     });
     window.addEventListener('keyup', (ev) => {
-        if ($(ev.target).hasClass('menu-node')) {
+        if ($(ev.target).hasClass('menu-node') && ev.key === 'ArrowUp') {
             ev.preventDefault();
         }
     });
@@ -38,10 +38,6 @@ let buildMenus = () => {
                 break;
             case 'menu-single':
                 menus.toStorage(new SSMenu(idx, menu, menus, head, list, menu.data('rel-text'), menu.data('rel-secret'))
-                    .includeNodes());
-                break;
-            case 'menu-multiple':
-                menus.toStorage(new MSMenu(idx, menu, menus, head, list, menu.data('rel-text'), menu.data('rel-secret'))
                     .includeNodes());
                 break;
             default: return menus;

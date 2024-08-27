@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-using DSL.Adapters.Product;
+using DSL.Adapters.Maintenance.Product;
+using DSL.Adapters.Maintenance.Category;
 using DSL.Services.Declarations;
-using DSL.Adapters.Category;
 
 namespace PL.Pages.Client
 {
@@ -17,10 +17,10 @@ namespace PL.Pages.Client
         public List<ProductRAdapter> Products { get; set; } = [];
         public CategoryRWAdapter Category { get; set; } = new ();
 
-        public void OnGet(string cid)
+        public void OnGet(string key)
         {
-            Products.AddRange(_pService.GetProductsOfCategory(cid));
-            Category = _cService.GetCategory(cid);
+            Products.AddRange(_pService.GetProductsOfCategory(key));
+            Category = _cService.GetCategory(key);
         }
     }
 }

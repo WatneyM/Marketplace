@@ -5,7 +5,7 @@
     Layout = "_Marketplace";
 }
 
-@using DSL.Adapters.Category
+@using DSL.Adapters.Maintenance.Category
 
 <div class="container px-5 my-5">
     <div class="row ai-center">
@@ -57,7 +57,7 @@
                         {
                             @foreach (CategoryRAdapter attachedCtg in attached)
                             {
-                                <a class="highlight my-3 p-3" href="/catalog?cid=@attachedCtg.Key">
+                                <a class="highlight my-3 p-3" href="/catalog/@attachedCtg.Key">
                                     <div class="row ai-center">
                                         <div class="col ta-center">
                                             <h3>@attachedCtg.Category</h3>

@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace DSL.Adapters.Product
+namespace DSL.Adapters.Maintenance.Product
 {
     public class ProductRWAdapter
     {

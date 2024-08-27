@@ -5,7 +5,7 @@
     Layout = "_Maintenance";
 }
 
-@using DSL.Adapters.Category
+@using DSL.Adapters.Maintenance.Category
 
 <div class="container px-5 my-5">
     <div class="row ai-center">
@@ -65,7 +65,7 @@
 
                 <div class="row my-3 jc-end">
                     <div class="col-0">
-                        <a class="button" href="/maintenance/category?cid=@primaryCtg.Key">
+                        <a class="button" href="/maintenance/category/@primaryCtg.Key">
                             <i class="fa fa-pen fa-sm"></i>
                             <p class="insertable">View</p>
                         </a>
@@ -103,7 +103,7 @@
 
                                     <div class="row my-3 jc-end">
                                         <div class="col-0">
-                                            <a class="button" href="/maintenance/category?cid=@attachedCtg.Key">
+                                            <a class="button" href="/maintenance/category/@attachedCtg.Key">
                                                 <i class="fa fa-pen fa-sm"></i>
                                                 <p class="insertable">View</p>
                                             </a>

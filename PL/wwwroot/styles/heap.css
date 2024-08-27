@@ -83,15 +83,8 @@
 }
 
 .field-validation-error {
-    background: var(--clr-dark-grey);
-    border-radius: .5rem;
-    bottom: -.85rem;
     color: var(--clr-red);
     font: 300 1.65rem JS-I;
-    padding: 0 .5rem;
-    position: absolute;
-    right: 2rem;
-    z-index: 2;
 }
 /*
     END OF --BUTTON STYLE REGION
@@ -105,8 +98,8 @@
     width: 100%;
     max-width: 20vw;
     max-height: 20vw;
-    min-width: var(--m-width);
-    min-height: var(--m-width);
+    min-width: var(--min-sm);
+    min-height: var(--min-sm);
     padding: 2rem;
     border-radius: .5rem;
 }
@@ -116,8 +109,8 @@
     height: auto;
     max-width: 10vw;
     max-height: 10vw;
-    min-width: var(--m-width);
-    min-height: var(--m-width);
+    min-width: var(--min-sm);
+    min-height: var(--min-sm);
     object-fit: cover;
     width: 100%;
     padding: 2rem;
@@ -138,6 +131,10 @@
     color: var(--clr-red);
 }
 
+.clr-b {
+    color: var(--clr-blue);
+}
+
 .highlight {
     border-radius: .5rem;
     transition: .2s ease-in-out;
@@ -152,8 +149,22 @@
     background: var(--clr-dark-red);
 }
 
-.wrappable {
-    min-width: var(--m-width);
+.min-sm {
+    min-width: var(--min-sm);
+}
+
+.min-md {
+    min-width: var(--min-md);
+}
+
+.info-separator {
+    border-left: .2px solid var(--clr-grey);
+    padding: 1rem;
+    border-radius: .5rem;
+}
+
+.min-lg {
+    min-width: var(--min-lg);
 }
 
 .insertable {
@@ -164,6 +175,17 @@
     box-shadow: .5rem .5rem 1rem var(--clr-black),
         -.1rem -.1rem 1rem var(--clr-dark-grey);
     border-radius: .5rem;
+}
+
+.display-centered {
+    display: flex;
+    flex-flow: column;
+    min-height: calc(100vh - 7rem);
+    justify-content: space-around;
+}
+
+.auth-gap {
+    row-gap: 5vh;
 }
 
 .block:focus-within {

@@ -1,12 +1,12 @@
-﻿@page "{pid}"
+﻿@page "{key}"
 @model PL.Pages.Client.ViewModel
 @{
     ViewData["PageTitle"] = Model.Product.Product;
     Layout = "_Marketplace";
 }
 
-@using DSL.Adapters.Attribute
-@using DSL.Adapters.Group
+@using DSL.Adapters.Maintenance.Attribute
+@using DSL.Adapters.Maintenance.Group
 
 <div class="container px-5 py-5">
     <div class="row ai-center">

@@ -3,9 +3,8 @@
 using BLL.Managers.Declarations;
 
 using DAL.Models;
-
-using DSL.Adapters.Attribute;
-using DSL.Adapters.Group;
+using DSL.Adapters.Maintenance.Attribute;
+using DSL.Adapters.Maintenance.Group;
 using DSL.Services.Declarations;
 
 namespace DSL.Services.Implementations
@@ -28,10 +27,10 @@ namespace DSL.Services.Implementations
         }));
         private readonly Mapper _modelToRA = new(new MapperConfiguration(cfg =>
         {
-            cfg.CreateMap<AttributeModel, AttributeRAdapter>()
-            .ForMember(m => m.AttachedToGroup, opts => opts
-            .MapFrom(p => p.GroupNav!.Group));
+            cfg.CreateMap<AttributeModel, AttributeRAdapter>();
         }));
+
+        public bool KeyCheck(string key) => _manager.Has(key);
 
         public AttributeRWAdapter GetAttribute(string attributeKey)
         {

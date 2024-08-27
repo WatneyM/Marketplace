@@ -1,202 +1,230 @@
-﻿@page "{cid?}/{pid?}"
+﻿@page "{ckey?}/{pkey?}"
 @model PL.Pages.Maintenance.Product.EditorModel
 @{
     int idx = 0;
-    bool productAdded = Request.Query.ContainsKey("pid")
-    && Request.Query["pid"] != "";
+    bool productAdded = Request.RouteValues["pkey"] != null;
 
-    @if (productAdded)
+    @if (Model.KeyChecked)
     {
-        ViewData["PageTitle"] = "View - " + Model.Product.Product;
+        if (productAdded)
+        {
+            ViewData["PageTitle"] = "View - " + Model.Product.Product;
+        }
+        else
+        {
+            ViewData["PageTitle"] = "New Product";
+        }
     }
     else
     {
-        ViewData["PageTitle"] = "New Product";
+        ViewData["PageTitle"] = "Product Not Found";
     }
 
     Layout = "_Maintenance";
 }
 
-@using DSL.Adapters.Attribute
-@using DSL.Adapters.Category
+@using DSL.Adapters.Maintenance.Attribute
+@using DSL.Adapters.Maintenance.Category
 
-<div class="container px-5 my-5">
-    <div class="row ai-center">
-        <div class="col-0">
-            <i class="fa fa-info-circle fa-2xl clr-g mx-3"></i>
-        </div>
-
-        <div class="col">
-            @if (productAdded)
-            {
-                <h3>
-                    You have selected [@Model.Product.Product].<br />
-                    Review, or update information about product, if neccesary
-                </h3>
-            }
-            else
-            {
-                <h3>
-                    You have selected option to add new product.<br />
-                    Use fields below and provide information about new product.<br />
-                    Add appropriate product name, descriptions and provide product characteristics
-                </h3>
-            }
-        </div>
-    </div>
-</div>
-
-<div class="container px-5 my-5">
-    <form method="post" autocomplete="off" id="viewer">
+@if (Model.KeyChecked)
+{
+    <div class="container px-4 my-5">
         <div class="row ai-center">
-            <div class="col">
-                <div class="row field jc-center">
-                    <input class="secret" id="loader" type="file" data-component="loader"
-                           data-dest="#p-image" data-img="#img" data-label="#label"
-                           accept="image/jpeg, image/jpg, image/png" />
-
-                    @if (!string.IsNullOrEmpty(Model.Product.Image))
-                    {
-                        <img class="img-md" id="img" src="@Model.Product.Image" alt="@Model.Product.Product" />
-                    }
-                    else
-                    {
-                        <img class="img-md" id="img" src="data:image/gif;base64,R0lGODlhAQABAPcAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAP8ALAAAAAABAAEAAAgEAP8FBAA7" alt="No image uploaded yet" />
-                    }
-
-                    <span asp-validation-for="Product.Image"></span>
-                </div>
-
-                <div class="row jc-center">
-                    <label class="img-label" id="label" for="loader">Click to upload image...</label>
-                </div>
+            <div class="col-0">
+                <i class="fa fa-info-circle fa-2xl clr-g mx-3"></i>
             </div>
 
             <div class="col">
-                <div class="row my-3">
-                    <div class="col ta-end">
-                        <p>Attached To Category: @Model.CurrentCategory.Category</p>
-                    </div>
-                </div>
-
-                <div class="field">
-                    <input type="password" class="secret" value="@Model.Product.Key"
-                           asp-for="Product.Key" readonly tabindex="-1" />
-                    <input type="password" class="secret" value="@Model.CurrentCategory.Key"
-                           asp-for="Product.AttachedToCategory" readonly tabindex="-1" />
-                    <input type="password" class="secret" id="p-image" value="@Model.Product.Image"
-                           asp-for="Product.Image" readonly tabindex="-1" />
-                </div>
-
-                <div class="field">
-                    <input type="text" class="input" id="p-name" placeholder=" "
-                           asp-for="Product.Product" />
-                    <label class="label" for="p-name">Product</label>
-
-                    <span asp-validation-for="Product.Product"></span>
-                </div>
-
-                <div class="field">
-                    <textarea class="textarea" id="p-s-desc" placeholder=" "
-                              asp-for="Product.ShortDescription"></textarea>
-                    <label class="label" for="p-s-desc">Short description</label>
-                </div>
-
-                <div class="field">
-                    <textarea class="textarea" id="p-l-desc" placeholder=" "
-                              asp-for="Product.LongDescription"></textarea>
-                    <label class="label" for="p-l-desc">Long description</label>
-                </div>
-
-                <div class="field">
-                    <input type="text" class="input" id="p-price" placeholder=" "
-                           asp-for="Product.Price" />
-                    <label class="label" for="p-price">Price</label>
-
-                    <span asp-validation-for="Product.Price"></span>
-                </div>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col">
-                @foreach (var group in Model.Groups)
+                @if (productAdded)
                 {
-                    <h3>@group.Group</h3>
-
-                    if (productAdded)
-                    {
-                        foreach (ProductAttributeXRWAdapter _attribute in group.AttachedAttributes!)
-                        {
-                            idx = Model.Product.AttachedValues
-                            .IndexOf(Model.Product.AttachedValues
-                            .Find(p => p.AttachedToAttribute == _attribute.Key)!);
-
-                            <div class="field">
-                                <input type="text" class="input" id="@group.Group-@_attribute.Attribute" placeholder=" "
-                                       value="@Model.Product.AttachedValues![idx].Value"
-                                       asp-for="@Model.Product.AttachedValues![idx].Value" />
-                                <label class="label" for="@group.Group-@_attribute.Attribute">@_attribute.Attribute</label>
-
-                                <input type="password" class="secret"
-                                       value="@_attribute.Key"
-                                       asp-for="@Model.Product.AttachedValues![idx].AttachedToAttribute"
-                                       readonly tabindex="-1" />
-
-                                <span asp-validation-for="@Model.Product.AttachedValues![idx].Value"></span>
-                            </div>
-                        }
-                    }
-                    else
-                    {
-                        foreach (ProductAttributeXRWAdapter _attribute in group.AttachedAttributes!)
-                        {
-                            <div class="field">
-                                <input type="text" class="input" id="@group.Group-@_attribute.Attribute" placeholder=" "
-                                       value="@Model.Product.AttachedValues![idx].Value"
-                                       asp-for="@Model.Product.AttachedValues![idx].Value" />
-                                <label class="label" for="@group.Group-@_attribute.Attribute">@_attribute.Attribute</label>
-
-                                <input type="password" class="secret"
-                                       value="@_attribute.Key"
-                                       asp-for="@Model.Product.AttachedValues![idx].AttachedToAttribute"
-                                       readonly tabindex="-1" />
-
-                                <span asp-validation-for="@Model.Product.AttachedValues![idx].Value"></span>
-                            </div>
-
-                            ++idx;
-                        }
-                    }
+                    <h3>
+                        You have selected [@Model.Product.Product].<br />
+                        Review, or update information about product, if neccesary
+                    </h3>
+                }
+                else
+                {
+                    <h3>
+                        You have selected option to add new product.<br />
+                        Use fields below and provide information about new product.<br />
+                        Add appropriate product name, descriptions and provide product characteristics
+                    </h3>
                 }
             </div>
         </div>
-    </form>
-</div>
+    </div>
 
-<div class="container px-5 my-5">
-    <div class="row jc-center">
-        <div class="col-0 my-1 mx-2">
+    <div class="container px-4 my-5">
+        <form method="post" autocomplete="off" id="viewer">
+            <div class="row ai-center">
+                <div class="col">
+                    <div class="row field jc-center">
+                        <input class="secret" id="loader" type="file" data-component="loader"
+                               data-dest="#p-image" data-img="#img" data-label="#label"
+                               accept="image/jpeg, image/jpg, image/png" />
+
+                        @if (!string.IsNullOrEmpty(Model.Product.Image))
+                        {
+                            <img class="img-md" id="img" src="@Model.Product.Image" alt="@Model.Product.Product" />
+                        }
+                        else
+                        {
+                            <img class="img-md" id="img" src="data:image/gif;base64,R0lGODlhAQABAPcAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAP8ALAAAAAABAAEAAAgEAP8FBAA7" alt="No image uploaded yet" />
+                        }
+                    </div>
+
+                    <div class="row jc-center">
+                        <label class="img-label" id="label" for="loader">Click to upload image...</label>
+                    </div>
+
+                    <div class="row">
+                        <div class="col ta-center">
+                            <span asp-validation-for="Product.Image"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col">
+                    <div class="row my-3">
+                        <div class="col ta-end">
+                            <p>Attached To Category: @Model.CurrentCategory.Category</p>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <input type="password" class="secret" value="@Model.Product.Key"
+                               asp-for="Product.Key" readonly tabindex="-1" />
+                        <input type="password" class="secret" value="@Model.CurrentCategory.Key"
+                               asp-for="Product.AttachedToCategory" readonly tabindex="-1" />
+                        <input type="password" class="secret" id="p-image" value="@Model.Product.Image"
+                               asp-for="Product.Image" readonly tabindex="-1" />
+                    </div>
+
+                    <div class="field">
+                        <input type="text" class="input" id="p-name" placeholder=" "
+                               asp-for="Product.Product" />
+                        <label class="label" for="p-name">Product</label>
+
+                        <span asp-validation-for="Product.Product"></span>
+                    </div>
+
+                    <div class="field">
+                        <textarea class="textarea" id="p-s-desc" placeholder=" "
+                                  asp-for="Product.ShortDescription"></textarea>
+                        <label class="label" for="p-s-desc">Short description</label>
+                    </div>
+
+                    <div class="field">
+                        <textarea class="textarea" id="p-l-desc" placeholder=" "
+                                  asp-for="Product.LongDescription"></textarea>
+                        <label class="label" for="p-l-desc">Long description</label>
+                    </div>
+
+                    <div class="field">
+                        <input type="text" class="input" id="p-price" placeholder=" "
+                               asp-for="Product.Price" />
+                        <label class="label" for="p-price">Price</label>
+
+                        <span asp-validation-for="Product.Price"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col">
+                    @foreach (var group in Model.Groups)
+                    {
+                        <h3>@group.Group</h3>
+
+                        if (productAdded)
+                        {
+                            foreach (ProductAttributeXRWAdapter _attribute in group.AttachedAttributes!)
+                            {
+                                idx = Model.Product.AttachedValues
+                                .IndexOf(Model.Product.AttachedValues
+                                .Find(p => p.AttachedToAttribute == _attribute.Key)!);
+
+                                <div class="field">
+                                    <input type="text" class="input" id="@group.Group-@_attribute.Attribute" placeholder=" "
+                                           value="@Model.Product.AttachedValues![idx].Value"
+                                           asp-for="@Model.Product.AttachedValues![idx].Value" />
+                                    <label class="label" for="@group.Group-@_attribute.Attribute">@_attribute.Attribute</label>
+
+                                    <input type="password" class="secret"
+                                           value="@_attribute.Key"
+                                           asp-for="@Model.Product.AttachedValues![idx].AttachedToAttribute"
+                                           readonly tabindex="-1" />
+
+                                    <span asp-validation-for="@Model.Product.AttachedValues![idx].Value"></span>
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            foreach (ProductAttributeXRWAdapter _attribute in group.AttachedAttributes!)
+                            {
+                                <div class="field">
+                                    <input type="text" class="input" id="@group.Group-@_attribute.Attribute" placeholder=" "
+                                           value="@Model.Product.AttachedValues![idx].Value"
+                                           asp-for="@Model.Product.AttachedValues![idx].Value" />
+                                    <label class="label" for="@group.Group-@_attribute.Attribute">@_attribute.Attribute</label>
+
+                                    <input type="password" class="secret"
+                                           value="@_attribute.Key"
+                                           asp-for="@Model.Product.AttachedValues![idx].AttachedToAttribute"
+                                           readonly tabindex="-1" />
+
+                                    <span asp-validation-for="@Model.Product.AttachedValues![idx].Value"></span>
+                                </div>
+
+                                ++idx;
+                            }
+                        }
+                    }
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div class="container px-4 my-5">
+        <div class="row jc-center">
+            <div class="col-0 my-1 mx-2">
+                @if (productAdded)
+                {
+                    <button class="button" form="viewer"
+                        asp-page-handler="Push" asp-route-ckey="@Model.CurrentCategory.Key">Update </button>
+                }
+                else
+                {
+                    <button class="button" form="viewer"
+                        asp-page-handler="Push" asp-route-ckey="@Model.CurrentCategory.Key">Create</button>
+                }
+            </div>
+
             @if (productAdded)
             {
-                <button class="button" form="viewer"
-                        asp-page-handler="Push" asp-route-cid="@Model.CurrentCategory.Key">
-                    Update
-                </button>
-            }
-            else
-            {
-                <button class="button" form="viewer"
-                    asp-page-handler="Push" asp-route-cid="@Model.CurrentCategory.Key">Create</button>
+                <div class="col-0 my-1 mx-2">
+                    <a class="button warning"
+                       href="/maintenance/product/@Model.CurrentCategory.Key/@Model.Product.Key?handler=Drop">Drop</a>
+                </div>
             }
         </div>
-
-        @if (productAdded)
-        {
-            <div class="col-0 my-1 mx-2">
-                <a class="button warning"
-                    href="/maintenance/product?cid=@Model.CurrentCategory.Key&pid=@Model.Product.Key&handler=drop">Drop</a>
+    </div>
+}
+else
+{
+<div class="display-centered">
+    <div class="container px-4 py-5 my-5">
+        <div class="row">
+            <div class="col ta-center">
+                <h3>No record for requested key was found</h3>
             </div>
-        }
+        </div>
+        <div class="row jc-center my-3  ">
+            <div class="col-0">
+                <a class="button" href="/maintenance/categories">Go back</a>
+            </div>
+        </div>
     </div>
 </div>
+}

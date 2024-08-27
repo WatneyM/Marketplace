@@ -1,4 +1,4 @@
-﻿namespace DSL.Adapters.Attribute
+﻿namespace DSL.Adapters.Maintenance.Attribute
 {
     public class AttributeRAdapter
     {

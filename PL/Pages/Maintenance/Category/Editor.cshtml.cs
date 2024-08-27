@@ -1,11 +1,13 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-using DSL.Adapters.Category;
+using DSL.Adapters.Maintenance.Category;
 using DSL.Services.Declarations;
 
 namespace PL.Pages.Maintenance.Category
 {
+    [Authorize(Roles = "Administrator")]
     [BindProperties]
     public class EditorModel(ICategoryService service) : PageModel
     {
@@ -14,19 +16,28 @@ namespace PL.Pages.Maintenance.Category
         public CategoryRWAdapter Category { get; set; } = new();
         public List<CategoryRAdapter> Categories { get; set; } = [];
 
-        public void OnGet(string cid)
+        public bool KeyChecked { get; set; } = true;
+
+        public void OnGet(string key)
         {
-            if (cid is not null)
+            if (key is null)
             {
-                Category = _service.GetCategory(cid);
+                Categories.AddRange(_service.GetPrimaryCategories());
+            }
+            else if (_service.KeyCheck(key))
+            {
+                Category = _service.GetCategory(key);
                 Categories.AddRange(_service.GetPrimaryCategories(Category.Key));
             }
-            else Categories.AddRange(_service.GetPrimaryCategories());
+            else
+            {
+                KeyChecked = !KeyChecked;
+            }
         }
 
-        public IActionResult OnGetDrop(string cid)
+        public IActionResult OnGetDrop(string key)
         {
-            _service.DropCategory(cid);
+            _service.DropCategory(key);
 
             return Redirect("/maintenance/categories");
         }

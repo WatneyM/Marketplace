@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-using DSL.Adapters.Group;
-using DSL.Adapters.Product;
+using DSL.Adapters.Maintenance.Group;
+using DSL.Adapters.Maintenance.Product;
 using DSL.Services.Declarations;
 
 namespace PL.Pages.Client
@@ -17,9 +17,9 @@ namespace PL.Pages.Client
         public ProductRWAdapter Product = new();
         public List<AttributeGroupXRAdapter> Groups { get; set; } = [];
 
-        public void OnGet(string pid)
+        public void OnGet(string key)
         {
-            Product = _pService.GetProduct(pid);
+            Product = _pService.GetProduct(key);
             Groups.AddRange(_gService.GetGroupsByCategory(Product.AttachedToCategory));
         }
     }

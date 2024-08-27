@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace DSL.Adapters.Group
+namespace DSL.Adapters.Maintenance.Group
 {
     public class AttributeGroupRWAdapter
     {

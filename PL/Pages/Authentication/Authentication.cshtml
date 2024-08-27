@@ -1,0 +1,99 @@
+﻿@page
+@model PL.Pages.Authentication.AuthenticationModel
+@{
+    string? returnUrl = Request.Query["ReturnUrl"];
+
+    ViewData["PageTitle"] = "Authentication";
+    Layout = "_Authentication";
+}
+
+<div class="container px-4 my-5">
+    <div class="row auth-gap jc-sa ai-center">
+        <div class="col-5">
+            <div class="row my-5 mt-0">
+                <div class="col ta-center">
+                    <h3 class="min-md">Authentication</h3>
+                </div>
+            </div>
+
+            <div class="row ai-center jc-center">
+                <div class="col-0">
+                    <i class="fa fa-info-circle fa-2xl clr-g mx-3"></i>
+                </div>
+                <div class="col info-separator ta-center">
+                    <p>
+                        Greetings, <strong>User</strong>! To sign in into your Account, use form on the right.
+                        Provide your username and password.<br />
+                        If you are here for first time, you need to register before. Follow link below.<br />
+                        Or, follow second link and use your Google Account to sign in/sign up.
+                        It will take a single click.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-3 card p-4 my-5">
+            <div class="row">
+                <div class="col">
+                    <form method="post" id="auth" autocomplete="off">
+                        <div class="field">
+                            <input type="text" class="input" id="reg-username" asp-for="AuthData.Username" />
+                            <label class="label" for="reg-username">Username</label>
+
+                            <span asp-validation-for="AuthData.Username"></span>
+                        </div>
+
+                        <div class="field">
+                            <input type="password" class="input" id="reg-password" asp-for="AuthData.Password" />
+                            <label class="label" for="reg-password">Password</label>
+
+                            <span asp-validation-for="AuthData.Password"></span>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="row my-3">
+                <div class="col ta-center">
+                    @if (returnUrl is not null)
+                    {
+                        <button class="button" form="auth" asp-page-handler="Authorize"
+                                asp-route-ReturnUrl="@returnUrl">
+                            Sign In
+                        </button>
+                    }
+                    else
+                    {
+                        <button class="button" form="auth"
+                                asp-page-handler="SignIn">
+                            Sign In
+                        </button>
+                    }
+                </div>
+            </div>
+            <div class="row my-3">
+                <div class="col ta-center">
+                    <a class="link" href="/recovery">Forgot password?</a>
+                </div>
+            </div>
+            <div class="row my-3">
+                <div class="col ta-center">
+                    <a class="link" href="/registration">Have not an account? Sign Up</a>
+                </div>
+            </div>
+            <hr class="my-3 px-5 mx-5" />
+            <div class="row my-3">
+                <div class="col ta-center">
+                    @if (returnUrl is not null)
+                    {
+                        <a class="link" href="/authentication?handler=RequestExternalSignIn&provider=Google&returnUrl=/authentication?handler=ExternalSignInApprovedAndRedirect%26ReturnUrl=@returnUrl">Or, sign in with <i class="fa-brands fa-google"></i>oogle</a>
+                    }
+                    else
+                    {
+                        <a class="link" href="/authentication?handler=RequestExternalSignIn&provider=Google&returnUrl=/authentication?handler=ExternalSignInApproved">Or, sign in with <i class="fa-brands fa-google"></i>oogle</a>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

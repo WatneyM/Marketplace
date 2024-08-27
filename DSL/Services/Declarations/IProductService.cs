@@ -1,9 +1,11 @@
-﻿using DSL.Adapters.Product;
+﻿using DSL.Adapters.Maintenance.Product;
 
 namespace DSL.Services.Declarations
 {
     public interface IProductService
     {
+        public bool KeyCheck(string key);
+
         public int GetCount();
         public int GetCountOfCategory(string categoryKey);
 

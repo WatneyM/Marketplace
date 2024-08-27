@@ -1,14 +1,13 @@
-﻿@page "{cid}"
+﻿@page "{key}"
 @model PL.Pages.Maintenance.Product.ListModel
 @{
-    bool categorySelected = Request.Query.ContainsKey("cid")
-    && Request.Query["cid"] != "";
+    bool categorySelected = Request.RouteValues["key"] != null;
 
     ViewData["PageTitle"] = "View All Products";
     Layout = "_Maintenance";
 }
 
-@using DSL.Adapters.Category
+@using DSL.Adapters.Maintenance.Category
 
 <div class="container px-5 my-5">
     <div class="row ai-center">
@@ -100,7 +99,7 @@
 
                         <div class="row my-3 jc-end">
                             <div class="col-0">
-                                <a class="button" href="/maintenance/product?cid=@product.AttachedToCategory&pid=@product.Key">View Product</a>
+                                <a class="button" href="/maintenance/product/@product.AttachedToCategory/@product.Key">View Product</a>
                             </div>
                         </div>
                     </div>
@@ -130,7 +129,7 @@
             <div class="menu-list">
                 @foreach (CategoryRAdapter category in Model.Categories)
                 {
-                    <a href="/maintenance/products?cid=@category.Key"
+                    <a href="/maintenance/products/@category.Key"
                        data-node="ns" class="menu-node">@category.Category</a>
                 }
             </div>
@@ -140,7 +139,7 @@
         {
             <div class="col-0 my-1 mx-3">
                 <a class="button"
-                   href="/maintenance/product?cid=@Model.CurrentCategory">Add Product</a>
+                   href="/maintenance/product/@Model.CurrentCategory">Add Product</a>
             </div>
         }
     </div>

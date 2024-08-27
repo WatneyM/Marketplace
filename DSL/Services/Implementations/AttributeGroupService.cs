@@ -3,9 +3,8 @@
 using BLL.Managers.Declarations;
 
 using DAL.Models;
-
-using DSL.Adapters.Attribute;
-using DSL.Adapters.Group;
+using DSL.Adapters.Maintenance.Attribute;
+using DSL.Adapters.Maintenance.Group;
 using DSL.Services.Declarations;
 
 namespace DSL.Services.Implementations
@@ -22,9 +21,7 @@ namespace DSL.Services.Implementations
             => cfg.CreateMap<AttributeGroupModel, AttributeGroupRWAdapter>()));
         private readonly Mapper _modelToRA = new(new MapperConfiguration(cfg =>
         {
-            cfg.CreateMap<AttributeGroupModel, AttributeGroupRAdapter>()
-            .ForMember(m => m.AttachedToCategory, opts => opts
-            .MapFrom(p => p.CategoryNav!.Category));
+            cfg.CreateMap<AttributeGroupModel, AttributeGroupRAdapter>();
         }));
 
         private readonly Mapper _modelToXRA = new(new MapperConfiguration(cfg =>
@@ -32,6 +29,8 @@ namespace DSL.Services.Implementations
             cfg.CreateMap<AttributeGroupModel, AttributeGroupXRAdapter>();
             cfg.CreateMap<AttributeModel, ProductAttributeXRWAdapter>();
         }));
+
+        public bool KeyCheck(string key) => _manager.Has(key);
 
         public AttributeGroupRWAdapter GetGroup(string groupKey)
         {

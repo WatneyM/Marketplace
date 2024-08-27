@@ -1,9 +1,11 @@
-﻿using DSL.Adapters.Group;
+﻿using DSL.Adapters.Maintenance.Group;
 
 namespace DSL.Services.Declarations
 {
     public interface IAttributeGroupService
     {
+        public bool KeyCheck(string key);
+
         public AttributeGroupRWAdapter GetGroup(string groupKey);
 
         public IEnumerable<AttributeGroupRWAdapter> GetGroups();

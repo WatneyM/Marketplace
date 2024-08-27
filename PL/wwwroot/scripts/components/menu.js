@@ -145,7 +145,7 @@ class SSMenu extends NSMenu {
         this.#activeNodeIdx = -1;
 
         this.swapSelectedNode = (idx) => {
-            if (this.#activeNodeIdx === -1) {
+            if (this.#activeNodeIdx === -1 || this.#activeNodeIdx === idx) {
                 this.#activeNodeIdx = idx;
 
                 return;

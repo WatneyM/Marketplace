@@ -3,8 +3,7 @@
 using BLL.Managers.Declarations;
 
 using DAL.Models;
-
-using DSL.Adapters.Product;
+using DSL.Adapters.Maintenance.Product;
 using DSL.Services.Declarations;
 
 namespace DSL.Services.Implementations
@@ -27,6 +26,8 @@ namespace DSL.Services.Implementations
         }));
         private readonly Mapper _modelToRA = new(new MapperConfiguration(cfg
             => cfg.CreateMap<ProductModel, ProductRAdapter>()));
+
+        public bool KeyCheck(string key) => _manager.Has(key);
 
         public int GetCount()
         {

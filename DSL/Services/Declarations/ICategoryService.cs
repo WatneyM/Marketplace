@@ -1,9 +1,11 @@
-﻿using DSL.Adapters.Category;
+﻿using DSL.Adapters.Maintenance.Category;
 
 namespace DSL.Services.Declarations
 {
     public interface ICategoryService
     {
+        public bool KeyCheck(string key);
+
         public CategoryRWAdapter GetCategory(string categoryKey);
 
         public IEnumerable<CategoryRWAdapter> GetCategories();

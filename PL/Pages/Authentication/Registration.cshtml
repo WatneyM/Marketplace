@@ -1,0 +1,129 @@
+﻿@page
+@model PL.Pages.Authentication.RegistrationModel
+@{
+    ViewData["PageTitle"] = "Registration";
+    Layout = "_Authentication";
+}
+
+<div class="container px-4 my-5">
+    <div class="row auth-gap jc-sa ai-center">
+        <div class="col-5">
+            <div class="row my-5 mt-0">
+                <div class="col ta-center">
+                    <h3 class="min-md">Registration</h3>
+                </div>
+            </div>
+
+            <div class="row my-5 ai-center jc-center">
+                <div class="col-0">
+                    <i class="fa fa-info-circle fa-2xl clr-g mx-3"></i>
+                </div>
+                <div class="col info-separator ta-center">
+                    <p>
+                        Greetings, <strong>User</strong>! You have chosen to create your personal Account.<br />
+                        Account is required for such actions as product ordering, evaluating, leaving feebacks, etc.<br />
+                        We need you to provide some information about yourself before registeration...<br />
+                        Or, if you already have an Account, follow link below to sign in page.
+                    </p>
+                </div>
+            </div>
+
+            <div class="row my-5 ai-center jc-center">
+                <div class="col-0">
+                    <i class="fa fa-info-circle fa-2xl clr-g mx-3"></i>
+                </div>
+                <div class="col info-separator ta-center">
+                    <p>
+                        1. Provide your actual name. It needs for order handling.<br />
+                        2. Provide your email address. It will be an alternative way to make contact with you.<br />
+                        3. Provide your actual phone number. It will be a way to make contact with you.<br />
+                        4. Provide a username, that will be suitable for you.<br />
+                        5. Provide a strong enough password.
+                    </p>
+                </div>
+            </div>
+
+            <div class="row my-5 ai-center jc-center">
+                <div class="col-0">
+                    <i class="fa fa-info-circle fa-2xl clr-r mx-3"></i>
+                </div>
+                <div class="col info-separator ta-center">
+                    <p>
+                        We highly recommend you to store your username and password in handwritten form.<br />
+                        Password must contain at least one lowercase and one uppercase letter and be
+                        12-th symbols long minimal.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-3 card p-4 my-5">
+            <div class="row">
+                <div class="col">
+                    <form method="post" id="reg" autocomplete="off">
+                        <div class="field">
+                            <input type="text" class="input" id="reg-firstname" asp-for="AuthData.Firstname" />
+                            <label class="label" for="reg-firstname">Firstname</label>
+
+                            <span asp-validation-for="AuthData.Firstname"></span>
+                        </div>
+
+                        <div class="field">
+                            <input type="text" class="input" id="reg-lastname" asp-for="AuthData.Lastname" />
+                            <label class="label" for="reg-lastname">Lastname</label>
+
+                            <span asp-validation-for="AuthData.Lastname"></span>
+                        </div>
+
+                        <div class="field">
+                            <input type="text" class="input" id="reg-email" asp-for="AuthData.Email" />
+                            <label class="label" for="reg-email">Email</label>
+
+                            <span asp-validation-for="AuthData.Email"></span>
+                        </div>
+
+                        <div class="field">
+                            <input type="tel" class="input" id="reg-phone" asp-for="AuthData.PhoneNumber" />
+                            <label class="label" for="reg-phone">Phone Number</label>
+
+                            <span asp-validation-for="AuthData.PhoneNumber"></span>
+                        </div>
+
+                        <div class="field">
+                            <input type="text" class="input" id="reg-username" asp-for="AuthData.UserName" />
+                            <label class="label" for="reg-username">Username</label>
+
+                            <span asp-validation-for="AuthData.UserName"></span>
+                        </div>
+
+                        <div class="field">
+                            <input type="password" class="input" id="reg-password" asp-for="AuthData.Password" />
+                            <label class="label" for="reg-password">Password</label>
+
+                            <span asp-validation-for="AuthData.Password"></span>
+                        </div>
+
+                        <div class="field">
+                            <input type="password" class="input" id="reg-check" asp-for="AuthData.PassCheck" />
+                            <label class="label" for="reg-check">Repeat Password</label>
+
+                            <span asp-validation-for="AuthData.PassCheck"></span>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="row my-3">
+                <div class="col ta-center">
+                    <button class="button" form="reg" asp-page-handler="Register">Sign Up</button>
+                </div>
+            </div>
+            <hr class="my-3 px-5 mx-5" />
+            <div class="row">
+                <div class="col ta-center">
+                    <a class="link" href="/authentication">Already have an account? Sign In</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,131 +1,157 @@
-﻿@page "{cid?}"
+﻿@page "{key?}"
 @model PL.Pages.Maintenance.Category.EditorModel
 @{
-    bool categoryAdded = Request.Query.ContainsKey("cid")
-    && Request.Query["cid"] != "";
+    bool categoryAdded = Request.RouteValues["key"] != null;
 
-    @if (categoryAdded)
+    @if (Model.KeyChecked)
     {
-        ViewData["PageTitle"] = "View - " + Model.Category.Category;
+        if (categoryAdded)
+        {
+            ViewData["PageTitle"] = "View - " + Model.Category.Category;
+        }
+        else
+        {
+            ViewData["PageTitle"] = "New Category";
+        }
     }
     else
     {
-        ViewData["PageTitle"] = "New Category";
+        ViewData["PageTitle"] = "Category Not Found";
     }
 
     Layout = "_Maintenance";
 }
 
-@using DSL.Adapters.Category
+@using DSL.Adapters.Maintenance.Category
 
-<div class="container px-5 my-5">
-    <div class="row ai-center">
-        <div class="col-0">
-            <i class="fa fa-info-circle fa-2xl clr-g mx-3"></i>
-        </div>
+@if (Model.KeyChecked)
+{
+    <div class="container px-4 my-5">
+        <div class="row ai-center">
+            <div class="col-0">
+                <i class="fa fa-info-circle fa-2xl clr-g mx-3"></i>
+            </div>
 
-        <div class="col">
-            @if (categoryAdded)
-            {
-                <h3>
-                    You have selected [@Model.Category.Category] category.<br />
-                    Review, or update information about category, if neccesary
-                </h3>
-            }
-            else
-            {
-                <h3>
-                    You have selected option to add new category.<br />
-                    Use fields below and provide information about new category.<br />
-                    Add appropriate category name and choose category, to which new category will be attached.
-                </h3>
-            }
-        </div>
-    </div>
-</div>
-
-<div class="container px-5 my-5">
-    <form method="post" autocomplete="off" id="viewer">
-        <div class="field">
-            <input type="password" class="secret" value="@Model.Category.Key"
-                   asp-for="Category.Key" readonly tabindex="-1" />
-            <input type="password" class="secret" id="c-attachment-s"
-                   asp-for="Category.AttachedToCategory" readonly tabindex="-1" />
-        </div>
-
-        <div class="field">
-            <input type="text" class="input" id="c-name" placeholder=" "
-                   asp-for="Category.Category" />
-            <label class="label" for="c-name">Category</label>
-
-            <span asp-validation-for="Category.Category"></span>
-        </div>
-
-        <div class="field">
-            <input type="text" class="input" id="c-desc" placeholder=" "
-                   asp-for="Category.Description" />
-            <label class="label" for="c-desc">Description</label>
-
-            <span asp-validation-for="Category.Description"></span>
-        </div>
-
-        <div class="field">
-            <input type="text" class="input" id="c-attachment-v"
-                   placeholder=" " readonly tabindex="-1" />
-            <label class="label" for="c-attachment-v">Attached To Category</label>
-        </div>
-    </form>
-</div>
-
-<div class="container px-5 my-5">
-    <div class="row jc-center">
-        <div class="col-0 my-1 mx-2 menu" data-component="menu-single"
-             data-rel-text="#c-attachment-v" data-rel-secret="#c-attachment-s">
-            <button type="button" class="button">
-                <p class="insertable">Choose category</p>
-                <i class="fa fa-angle-down fa-sm"></i>
-            </button>
-
-            <div class="menu-list">
-                @foreach (CategoryRAdapter category in Model.Categories)
+            <div class="col">
+                @if (categoryAdded)
                 {
-                    if (Model.Category.AttachedToCategory == category.Key)
-                    {
-                        <button type="button" class="menu-node" data-node="ss"
-                        data-val="@category.Key" disabled>@category.Category</button>
-                    }
-                    else
-                    {
-                        <button type="button" class="menu-node" data-node="ss"
-                        data-val="@category.Key">@category.Category</button>
-                    }
+                    <h3>
+                        You have selected [@Model.Category.Category] category.<br />
+                        Review, or update information about category, if neccesary
+                    </h3>
                 }
-
-                <hr />
-                <button type="button" class="menu-node menu-reset"
-                data-node="cs">Mark As Primary</button>
+                else
+                {
+                    <h3>
+                        You have selected option to add new category.<br />
+                        Use fields below and provide information about new category.<br />
+                        Add appropriate category name and choose category, to which new category will be attached.
+                    </h3>
+                }
             </div>
         </div>
+    </div>
 
-        <div class="col-0 my-1 mx-2">
+    <div class="container px-4 my-5">
+        <form method="post" autocomplete="off" id="viewer">
+            <div class="field">
+                <input type="password" class="secret" value="@Model.Category.Key"
+                       asp-for="Category.Key" readonly tabindex="-1" />
+                <input type="password" class="secret" id="c-attachment-s"
+                       asp-for="Category.AttachedToCategory" readonly tabindex="-1" />
+            </div>
+
+            <div class="field">
+                <input type="text" class="input" id="c-name" placeholder=" "
+                       asp-for="Category.Category" />
+                <label class="label" for="c-name">Category</label>
+
+                <span asp-validation-for="Category.Category"></span>
+            </div>
+
+            <div class="field">
+                <input type="text" class="input" id="c-desc" placeholder=" "
+                       asp-for="Category.Description" />
+                <label class="label" for="c-desc">Description</label>
+
+                <span asp-validation-for="Category.Description"></span>
+            </div>
+
+            <div class="field">
+                <input type="text" class="input" id="c-attachment-v"
+                       placeholder=" " readonly tabindex="-1" />
+                <label class="label" for="c-attachment-v">Attached To Category</label>
+            </div>
+        </form>
+    </div>
+
+    <div class="container px-4 my-5">
+        <div class="row jc-center">
+            <div class="col-0 my-1 mx-2 menu" data-component="menu-single"
+                 data-rel-text="#c-attachment-v" data-rel-secret="#c-attachment-s">
+                <button type="button" class="button">
+                    <p class="insertable">Choose category</p>
+                    <i class="fa fa-angle-down fa-sm"></i>
+                </button>
+
+                <div class="menu-list">
+                    @foreach (CategoryRAdapter category in Model.Categories)
+                    {
+                        if (Model.Category.AttachedToCategory == category.Key)
+                        {
+                            <button type="button" class="menu-node" data-node="ss"
+                                data-val="@category.Key" disabled>@category.Category</button>
+                        }
+                        else
+                        {
+                            <button type="button" class="menu-node" data-node="ss"
+                                data-val="@category.Key">@category.Category</button>
+                        }
+                    }
+
+                    <hr />
+                    <button type="button" class="menu-node menu-reset"
+                        data-node="cs">Mark As Primary</button>
+                </div>
+            </div>
+
+            <div class="col-0 my-1 mx-2">
+                @if (categoryAdded)
+                {
+                    <button class="button" form="viewer"
+                        asp-page-handler="Push">Update</button>
+                }
+                else
+                {
+                    <button class="button" form="viewer"
+                        asp-page-handler="Push">Create</button>
+                }
+            </div>
+
             @if (categoryAdded)
             {
-                <button class="button" form="viewer"
-                    asp-page-handler="Push">Update</button>
-            }
-            else
-            {
-                <button class="button" form="viewer"
-                    asp-page-handler="Push">Create</button>
+                <div class="col-0 my-1 mx-2">
+                    <a class="button warning"
+                       href="/maintenance/category/@Model.Category.Key?handler=Drop">Drop</a>
+                </div>
             }
         </div>
-
-        @if (categoryAdded)
-        {
-            <div class="col-0 my-1 mx-2">
-                <a class="button warning"
-                   href="/maintenance/category?cid=@Model.Category.Key&handler=drop">Drop</a>
-            </div>
-        }
     </div>
-</div>
+}
+else
+{
+    <div class="display-centered">
+        <div class="container px-4 py-5 my-5">
+            <div class="row">
+                <div class="col ta-center">
+                    <h3>No record for requested key was found</h3>
+                </div>
+            </div>
+            <div class="row jc-center my-3  ">
+                <div class="col-0">
+                    <a class="button" href="/maintenance/categories">Go back</a>
+                </div>
+            </div>
+        </div>
+    </div>
+}

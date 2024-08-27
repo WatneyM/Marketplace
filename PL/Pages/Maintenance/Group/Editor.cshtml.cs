@@ -1,12 +1,14 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-using DSL.Adapters.Category;
-using DSL.Adapters.Group;
+using DSL.Adapters.Maintenance.Category;
+using DSL.Adapters.Maintenance.Group;
 using DSL.Services.Declarations;
 
 namespace PL.Pages.Maintenance.Group
 {
+    [Authorize(Roles = "Administrator")]
     [BindProperties]
     public class EditorModel(IAttributeGroupService gService,
         ICategoryService cService) : PageModel
@@ -17,17 +19,28 @@ namespace PL.Pages.Maintenance.Group
         public AttributeGroupRWAdapter Group { get; set; } = new();
         public List<CategoryRAdapter> Categories { get; set; } = [];
 
-        public void OnGet(string gid)
-        {
-            if (gid is not null)
-                Group = _gService.GetGroup(gid);
+        public bool KeyChecked { get; set; } = true;
 
-            Categories.AddRange(_cService.GetAttachableCategories());
+        public void OnGet(string key)
+        {
+            if (key is null)
+            {
+                Categories.AddRange(_cService.GetAttachableCategories());
+            }
+            else if (_gService.KeyCheck(key))
+            {
+                Group = _gService.GetGroup(key);
+                Categories.AddRange(_cService.GetAttachableCategories());
+            }
+            else
+            {
+                KeyChecked = !KeyChecked;
+            }
         }
 
-        public IActionResult OnGetDrop(string gid)
+        public IActionResult OnGetDrop(string key)
         {
-            _gService.DropGroup(gid);
+            _gService.DropGroup(key);
 
             return Redirect("/maintenance/groups");
         }
