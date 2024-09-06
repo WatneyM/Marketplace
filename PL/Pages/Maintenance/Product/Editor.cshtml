@@ -101,6 +101,25 @@
                     </div>
 
                     <div class="field">
+                        <input type="text" class="input" id="p-code" placeholder=" "
+                               asp-for="Product.Code" />
+                        <label class="label" for="p-code">Product No</label>
+
+                        <span asp-validation-for="Product.Code"></span>
+                    </div>
+
+                    @if (!productAdded)
+                    {
+                        <div class="field">
+                            <input type="text" class="input" id="p-amount" placeholder=" "
+                                   asp-for="Product.Amount" />
+                            <label class="label" for="p-amount">Amount</label>
+
+                            <span asp-validation-for="Product.Amount"></span>
+                        </div>
+                    }
+
+                    <div class="field">
                         <input type="text" class="input" id="p-name" placeholder=" "
                                asp-for="Product.Product" />
                         <label class="label" for="p-name">Product</label>

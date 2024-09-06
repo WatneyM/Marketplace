@@ -29,6 +29,9 @@
                 <div class="col-0">
                     <div class="row no-wrap block-a">
                         <div class="col mx-3">
+                            <a class="link" href="/maintenance"><h3>Orders</h3></a>
+                        </div>
+                        <div class="col mx-3">
                             <a class="link" href="/maintenance/categories"><h3>Category</h3></a>
                         </div>
                         <div class="col mx-3">
@@ -39,6 +42,9 @@
                         </div>
                         <div class="col mx-3">
                             <a class="link" href="/maintenance/products"><h3>Products</h3></a>
+                        </div>
+                        <div class="col mx-3">
+                            <a class="link" href="/maintenance/supply"><h3>Supply</h3></a>
                         </div>
                         <div class="col mx-3 menu" data-component="menu">
                             <button type="button" class="link">
@@ -77,10 +83,12 @@
                                 <i class="fa fa-bars fa-xl"></i>
                             </button>
                             <div class="menu-list my-3 ml-r">
+                                <a class="menu-node" data-node="ns" href="/maintenance"><p>Orders</p></a>
                                 <a class="menu-node" data-node="ns" href="/maintenance/categories"><p>Categories</p></a>
                                 <a class="menu-node" data-node="ns" href="/maintenance/groups"><p>Groups</p></a>
                                 <a class="menu-node" data-node="ns" href="/maintenance/attributes"><p>Attributes</p></a>
                                 <a class="menu-node" data-node="ns" href="/maintenance/products"><p>Products</p></a>
+                                <a class="menu-node" data-node="ns" href="/maintenance/supply"><p>Supply</p></a>
                                 <hr />
                                 @if (!User.Identity!.IsAuthenticated)
                                 {

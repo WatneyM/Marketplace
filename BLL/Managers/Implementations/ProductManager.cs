@@ -37,6 +37,13 @@ namespace BLL.Managers.Implementations
                 .Single(p => p.Key == dbKey);
         }
 
+        public IEnumerable<ProductModel> Read(IEnumerable<string> keys)
+        {
+            return _set.AsNoTracking()
+                .Where(p => keys.Contains(p.Key))
+                .AsEnumerable();
+        }
+
         public IEnumerable<ProductModel> ReadAll()
         {
             return _set.AsNoTracking().AsEnumerable();
@@ -67,6 +74,7 @@ namespace BLL.Managers.Implementations
         {
             ProductModel original = Track(model.Key)!;
 
+            original.Code = model.Code;
             original.Product = model.Product;
             original.ShortDescription = model.ShortDescription;
             original.LongDescription = model.LongDescription;
@@ -134,6 +142,14 @@ namespace BLL.Managers.Implementations
         {
             return _set.AsNoTracking()
                 .Where(p => p.AttachedToCategory == categoryKey)
+                .AsEnumerable();
+        }
+
+        public IEnumerable<KeyValuePair<string, string>> ReadProductNames(IEnumerable<string> keys)
+        {
+            return _set.AsNoTracking()
+                .Where(p => keys.Any(a => a == p.Key))
+                .Select(s => new KeyValuePair<string, string>(s.Key, s.Product))
                 .AsEnumerable();
         }
     }

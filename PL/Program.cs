@@ -47,6 +47,9 @@ builder.Services.ConfigureApplicationCookie(opts =>
     opts.ExpireTimeSpan = TimeSpan.FromDays(7D);
 });
 
+builder.Services.AddSession();
+
+builder.Services.AddTransient<ISessionService, SessionService>();
 builder.Services.AddTransient<IAuthService, AuthService>();
 builder.Services.AddTransient<IMailerService, MailerService>();
 
@@ -54,18 +57,26 @@ builder.Services.AddTransient<ICategoryService, CategoryService>();
 builder.Services.AddTransient<IAttributeGroupService, AttributeGroupService>();
 builder.Services.AddTransient<IAttributeService, AttributeService>();
 builder.Services.AddTransient<IProductService, ProductService>();
+builder.Services.AddTransient<IOrderService, OrderService>();
+builder.Services.AddTransient<ISupplyService, SupplyService>();
 
 builder.Services.AddTransient<ICategoryManager, CategoryManager>();
 builder.Services.AddTransient<IAttributeGroupManager, AGModelMaintenanceManager>();
 builder.Services.AddTransient<IAttributeManager, AttributeManager>();
 builder.Services.AddTransient<IProductManager, ProductManager>();
+builder.Services.AddTransient<IOrderManager, OrderManager>();
+builder.Services.AddTransient<ISupplyManager, SupplyManager>();
 
 builder.Services.AddRazorPages().AddRazorPagesOptions(options =>
 {
     options.Conventions
+    .AddPageRoute("/Client/Cart", "cart/{key?}");
+    options.Conventions
+    .AddPageRoute("/Client/Orders", "orders");
+    options.Conventions
     .AddPageRoute("/Client/Categories", "categories");
     options.Conventions
-    .AddPageRoute("/Client/Catalog", "catalog/{key?}");
+    .AddPageRoute("/Client/Catalog", "catalog/{key}");
     options.Conventions
     .AddPageRoute("/Client/Product", "product/{key?}");
 
@@ -77,7 +88,12 @@ builder.Services.AddRazorPages().AddRazorPagesOptions(options =>
     .AddPageRoute("/Authentication/Recovery", "recovery");
 
     options.Conventions
-    .AddPageRoute("/Maintenance/Maintenance", "maintenance");
+    .AddPageRoute("/Maintenance/Maintenance", "maintenance/{os:int=0}");
+    options.Conventions
+    .AddPageRoute("/Maintenance/Storage", "storage/{os:int=0}");
+
+    options.Conventions
+    .AddPageRoute("/Maintenance/Supply", "maintenance/supply/{key?}");
 
     options.Conventions
     .AddPageRoute("/Maintenance/Category/Editor", "maintenance/category/{key?}");
@@ -104,6 +120,8 @@ app = builder.Build();
 
 app.UseDefaultFiles();
 app.UseStaticFiles();
+
+app.UseSession();
 
 app.UseRouting();
 

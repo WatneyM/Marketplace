@@ -7,7 +7,7 @@
 
 @using DSL.Adapters.Maintenance.Category
 
-<div class="container px-5 my-5">
+<div class="container px-4 my-5">
     <div class="row ai-center">
         <div class="col-0">
             <i class="fa fa-info-circle fa-2xl clr-g mx-3"></i>
@@ -32,7 +32,7 @@
 
 @if (Model.Primaries.Count > 0)
 {
-    <div class="container px-5 my-5">
+    <div class="container px-4 my-5">
         @foreach (CategoryRAdapter primaryCtg in Model.Primaries)
         {
             List<CategoryRAdapter> attached = Model.Attached
@@ -97,7 +97,7 @@
 }
 else
 {
-    <div class="container px-5 my-5">
+    <div class="container px-4 my-5">
         <div class="row my-3">
             <div class="col ta-center">
                 <p>Seems, the list of categories is currently unavailable</p>

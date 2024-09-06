@@ -8,7 +8,7 @@
 @using DSL.Adapters.Maintenance.Attribute
 @using DSL.Adapters.Maintenance.Group
 
-<div class="container px-5 py-5">
+<div class="container px-4 py-5">
     <div class="row ai-center">
         <div class="col ta-center">
             <img class="img-md" src="@Model.Product.Image" alt="@Model.Product.Product" />
@@ -22,23 +22,48 @@
 
             <div class="row my-3 ai-center">
                 <div class="col">
-                    <p class="wrappable">Order Status: <strong class="clr-r">In Development</strong></p>
+                    @if (Model.Amount > 10)
+                    {
+                        <p class="wrappable">Order Status: <strong class="clr-g">Available</strong></p>
+                    }
+                    else if (Model.Amount <= 10 && Model.Amount > 0)
+                    {
+                        <p class="wrappable">Order Status: <strong class="clr-o">Running Out</strong></p>
+                    }
+                    else
+                    {
+                        <p class="wrappable">Order Status: <strong class="clr-r">Run Out</strong></p>
+                    }
                 </div>
                 <div class="col my-3 ta-end">
                     <p class="wrappable">@Model.Product.Price<i class="fa fa-hryvnia fa-xs"></i></p>
                 </div>
             </div>
 
-            <div class="row my-3">
-                <div class="col ta-center">
-                    <button class="button"><i class="fa fa-cart-shopping fa-xs"></i>Add To Cart</button>
+            <div class="row my-3 jc-center">
+                <div class="col-0">
+                    @if (Model.Amount <= 0)
+                    {
+                        <button class="button"><i class="fa fa-cart-shopping fa-xs"></i>Run Out</button>
+                    }
+                    else
+                    {
+                        @if ((bool)ViewData["AllowOrdering"]!)
+                        {
+                            <a class="button" href="/product/@Model.Product.Key?handler=Push"><i class="fa fa-cart-shopping fa-xs"></i>Add To Cart</a>
+                        }
+                        else
+                        {
+                            <button class="button"><i class="fa fa-cart-shopping fa-xs"></i>In Cart</button>
+                        }
+                    }
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-<div class="container px-5 my-5">
+<div class="container px-4 my-5">
     <div class="row my-3 px-5">
         <div class="col">
             <h2><i class="fa fa-pen fa-xs px-1 pl-0"></i>Description</h2>
@@ -52,7 +77,7 @@
     </div>
 </div>
 
-<div class="container px-5 my-5">
+<div class="container px-4 my-5">
     <div class="row my-3 px-5">
         <div class="col">
             <h2><i class="fa fa-pen fa-xs px-1 pl-0"></i>Characteristics</h2>

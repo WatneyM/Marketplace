@@ -1,0 +1,157 @@
+﻿@page "{os:int=0}"
+@model PL.Pages.Maintenance.StorageModel
+@{
+    Layout = "_Maintenance";
+    ViewData["PageTitle"] = "Order Storage";
+}
+
+@using DAL.Enums
+
+<div class="container px-4 my-5">
+    <div class="row ai-center">
+        <div class="col-0">
+            <i class="fa fa-info-circle fa-2xl clr-g mx-3"></i>
+        </div>
+
+        <div class="col my-3">
+            <h3>
+                Here stores all orders that have been processed successfully or have been revoked.
+            </h3>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col my-3 ta-end">
+            <p>
+                <strong>@Model.Products.Count</strong> @(Model.Products.Count == 1 ? "order" : "orders") in storage
+            </p>
+        </div>
+    </div>
+</div>
+
+<div class="container px-4 my-5">
+    <div class="row g-5">
+        <div class="col min-sm">
+            <div class="row g-3 jc-center">
+                <div class="col-0">
+                    <a href="/maintenance" class="link">@OrderProcessingState.Registered</a>
+                </div>
+
+                <div class="col-0">
+                    <a href="/maintenance/1" class="link">@OrderProcessingState.Accepted</a>
+                </div>
+
+                <div class="col-0">
+                    <a href="/maintenance/2" class="link">@OrderProcessingState.Sent</a>
+                </div>
+
+                <div class="col-0">
+                    <a href="/maintenance/3" class="link">@OrderProcessingState.Delivered</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col min-sm">
+            <div class="row g-3 jc-center">
+                <div class="col-0">
+                    @if (Model.RouteData.Values["os"]!.Equals("0"))
+                    {
+                        <p class="clr-b">@OrderCompletionState.Completed</p>
+                    }
+                    else
+                    {
+                        <a href="/storage/0" class="link">@OrderCompletionState.Completed</a>
+                    }
+                </div>
+
+                <div class="col-0">
+                    @if (Model.RouteData.Values["os"]!.Equals("1"))
+                    {
+                        <p class="clr-b">@OrderCompletionState.Revoked</p>
+                    }
+                    else
+                    {
+                        <a href="/storage/1" class="link">@OrderCompletionState.Revoked</a>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <hr class="my-3" />
+</div>
+
+<div class="container px-4 my-5">
+    @if (Model.Orders.Count == 0)
+    {
+        <div class="row">
+            <div class="col ta-center">
+                <p>No records</p>
+            </div>
+        </div>
+    }
+    @for (int idx = 0; idx < Model.Orders.Count; idx++)
+    {
+        <div class="card p-4">
+            <div class="row">
+                <div class="col">
+                    <p class="clr-b">@Model.Orders[idx].OrderNo</p>
+                </div>
+                <div class="col ta-end">
+                    <p class="clr-b">@Model.Orders[idx].WhenOrdered / @Model.Orders[idx].WhenUnordered</p>
+                </div>
+            </div>
+            <hr />
+            <div class="row my-3 ai-center">
+                <div class="col min-sm">
+                    <div class="row g-3">
+                        <div class="col">
+                            <h3>Product</h3>
+                        </div>
+                        <div class="col">
+                            <p>@Model.Products[idx].Product</p>
+                        </div>
+                    </div>
+
+                    <div class="row g-3">
+                        <div class="col">
+                            <h3>Price</h3>
+                        </div>
+                        <div class="col">
+                            <p>@Model.Products[idx].Price</p>
+                        </div>
+                    </div>
+
+                    <div class="row g-3">
+                        <div class="col">
+                            <h3>Ordered Amount</h3>
+                        </div>
+                        <div class="col">
+                            <p>@Model.Orders[idx].Amount</p>
+                        </div>
+                    </div>
+
+                    <div class="my-3">
+                        <div class="row g-3">
+                            <div class="col">
+                                <h3>Holder</h3>
+                            </div>
+                            <div class="col">
+                                <p>@Model.Orders[idx].AttachedUsername</p>
+                            </div>
+                        </div>
+
+                        <div class="row g-3">
+                            <div class="col">
+                                <h3>Shippment address</h3>
+                            </div>
+                            <div class="col">
+                                <p>@Model.Orders[idx].Address</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>

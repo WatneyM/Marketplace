@@ -8,7 +8,7 @@
 @using DSL.Adapters.Maintenance.Attribute
 @using DSL.Adapters.Maintenance.Group
 
-<div class="container px-5 my-5">
+<div class="container px- my-5">
     <div class="row ai-center">
         <div class="col-0">
             <i class="fa fa-info-circle fa-2xl clr-g mx-3"></i>
@@ -34,7 +34,7 @@
 
 @if (Model.Attributes.Count != 0)
 {
-    <div class="container px-5 my-5">
+    <div class="container px-4 my-5">
         @foreach (AttributeGroupRAdapter group in Model.Groups)
         {
             List<AttributeRAdapter> attached = Model.Attributes
@@ -106,7 +106,7 @@
 }
 else
 {
-    <div class="container px-5 my-5">
+    <div class="container px-4 my-5">
         <div class="row my-3">
             <div class="col ta-center">
                 <p>No attributes located in Storage</p>
@@ -115,7 +115,7 @@ else
     </div>
 }
 
-<div class="container px-5 my-5">
+<div class="container px-4 my-5">
     <div class="row jc-center">
         <div class="col-0">
             <a class="button my-2" href="/maintenance/attribute">Add Attribute</a>

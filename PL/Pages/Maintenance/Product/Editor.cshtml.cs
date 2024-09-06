@@ -15,11 +15,13 @@ namespace PL.Pages.Maintenance.Product
     [BindProperties]
     public class EditorModel(IProductService pService,
         ICategoryService cService,
-        IAttributeGroupService gService) : PageModel
+        IAttributeGroupService gService,
+        ISupplyService sService) : PageModel
     {
         private readonly IProductService _pService = pService;
         private readonly ICategoryService _cService = cService;
         private readonly IAttributeGroupService _gService = gService;
+        private readonly ISupplyService _sService = sService;
 
         public List<CategoryRAdapter> Categories { get; set; } = [];
         public List<AttributeGroupXRAdapter> Groups { get; set; } = [];
@@ -63,7 +65,18 @@ namespace PL.Pages.Maintenance.Product
         public IActionResult OnPostPush(string ckey)
         {
             if (ModelState.IsValid)
+            {
+                SupplyWAdapter adapter = new()
+                {
+                    Key = Guid.NewGuid().ToString(),
+                    Amount = Product.Amount,
+                    OfCategory = Product.AttachedToCategory,
+                    AttachedProduct = Product.Key
+                };
+
                 _pService.PushOrModifyProduct(Product);
+                _sService.CreateAmount(adapter);
+            }
 
             return Redirect("/maintenance/products/" + ckey);
         }

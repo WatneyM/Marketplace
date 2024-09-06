@@ -1,0 +1,113 @@
+﻿@page "{key?}"
+@model PL.Pages.Client.CartModel
+@{
+    ViewData["PgTitle"] = "Cart";
+    Layout = "_Marketplace";
+}
+
+@using DSL.Adapters.Maintenance.Product
+
+<div class="container px-4 my-5">
+    <div class="row ai-center">
+        <div class="col-0">
+            <i class="fa fa-info-circle fa-2xl clr-g mx-3"></i>
+        </div>
+
+        <div class="col my-3">
+            <h3>
+                Here all products you have interested to purchase.
+            </h3>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col my-3 ta-end">
+            <p>
+                There was <strong>@Model.Products.Count</strong> products, awaiting for ordering
+            </p>
+        </div>
+    </div>
+</div>
+
+@if (Model.Products.Count > 0) {
+    foreach (ProductRAdapter product in Model.Products)
+    {
+        <div class="container px-4 my-5">
+            <div class="card p-4">
+                <div class="row ai-center">
+                    <div class="col">
+                        <div class="row">
+                            <div class="col">
+                                <h2>Product</h2>
+                            </div>
+
+                            <div class="col">
+                                <p>@product.Product</p>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col">
+                                <h2>Price</h2>
+                            </div>
+
+                            <div class="col">
+                                <p>@product.Price<i class="fa fa-hryvnia fa-sm"></i></p>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col">
+                                <form method="post" id="form" autocomplete="off">
+                                    <div class="field m-0">
+                                        <input type="password" class="secret" value="@product.Key" asp-for="Info.AttachedProduct" />
+                                        <input type="text" class="input my-2"
+                                            placeholder="Enter postal operator address" asp-for="Info.Address" />
+                                        
+                                        <span asp-validation-for="Info.Address"></span>
+                                    </div>
+                                    <div class="field m-0">
+                                        <input type="number" class="input my-2"
+                                               min="1" max="5" value="1" asp-for="Info.Amount" />
+                                               
+                                        <span asp-validation-for="Info.Amount"></span>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="row jc-center">
+                            <div class="col-0">
+                                <button class="button mx-3" form="form" asp-page-handler="Create">Order</button>
+                            </div>
+
+                            <div class="col-0">
+                                <a class="button warning" href="/cart/@product.Key?handler=Decline">Decline</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+}
+else
+{
+    <div class="container px-4 my-5">
+        <div class="row">
+            <div class="col ta-center">
+                <p>Empty</p>
+            </div>
+        </div>
+    </div>
+}
+
+<div class="container px-4 my-5">
+    <div class="row">
+        <div class="col ta-center">
+            <p>Average price for all selected products - 
+                <strong>@Model.Products.Sum(s => s.Price)<i class="fa fa-hryvnia fa-sm"></i></strong></p>
+        </div>
+    </div>
+</div>

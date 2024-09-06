@@ -6,8 +6,12 @@ namespace DSL.Adapters.Maintenance.Product
     {
         public string Key { get; set; } = Guid.NewGuid().ToString();
 
+        [Required(ErrorMessage = "Required. Field must contain a product code")]
+        public string Code { get; set; } = string.Empty;
         [Required(ErrorMessage = "Required. Field must contain a product name")]
         public string Product { get; set; } = string.Empty;
+        [Range(0, int.MaxValue, ErrorMessage = "Value out of range")]
+        public int Amount { get; set; }
 
         public string? ShortDescription { get; set; }
         public string? LongDescription { get; set; }

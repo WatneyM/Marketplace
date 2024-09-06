@@ -50,6 +50,9 @@ namespace DAL
         public DbSet<AttributeModel> Attributes { get; set; }
         public DbSet<AttributeGroupModel> AttributeGroups { get; set; }
         public DbSet<ProductAttributeModel> AttributesData { get; set; }
+        public DbSet<OrderModel> Orders { get; set; }
+        public DbSet<StoredOrderModel> StoredOrders { get; set; }
+        public DbSet<SupplyModel> Supplies { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

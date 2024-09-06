@@ -14,6 +14,8 @@
     <link type="text/css" rel="stylesheet" href="~/lib/font-awesome/css/all.min.css" />
 
     <script src="~/lib/jquery/jquery.min.js"></script>
+    <script src="~/lib/jquery-validate/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
 
     <title>@ViewData["PageTitle"]</title>
 </head>
@@ -41,6 +43,13 @@
                             </a>
                         </div>
 
+                        <div class="col mx-3">
+                            <a class="link" href="/cart">
+                                <i class="fa fa-cart-shopping fa-sm px-1 pl-0"></i>
+                                <h3 class="insertable">Cart</h3>
+                            </a>
+                        </div>
+
                         <div class="col mx-3 menu" data-component="menu">
                             <button type="button" class="link">
                                 <i class="fa fa-user fa-sm"></i>
@@ -48,6 +57,10 @@
                                 <i class="fa fa-angle-down fa-sm"></i>
                             </button>
                             <div class="menu-list">
+                                <a href="/orders" data-node="ns" class="menu-node">
+                                    <p class="insertable">Orders</p>
+                                </a>
+                                <hr />
                                 @if (!User.Identity!.IsAuthenticated)
                                 {
                                     <a href="/authentication" data-node="ns" class="menu-node">
@@ -62,11 +75,14 @@
                                         <p class="insertable">Sign Out</p>
                                     </a>
                                 }
-                                <hr />
-                                <a href="/maintenance" data-node="ns" class="menu-node">
-                                    <i class="fa fa-server fa-xs"></i>
-                                    <p class="insertable">Maintenance</p>
-                                </a>
+                                @if (User.IsInRole("Administrator"))
+                                {
+                                    <hr />
+                                    <a href="/maintenance" data-node="ns" class="menu-node">
+                                        <i class="fa fa-server fa-xs"></i>
+                                        <p class="insertable">Maintenance</p>
+                                    </a>
+                                }
                             </div>
                         </div>
                     </div>
@@ -85,7 +101,15 @@
                                     <i class="fa fa-list fa-sm px-1 pl-0"></i>
                                     <p class="insertable">Categories</p>
                                 </a>
+                                <a href="/cart" data-node="ns" class="menu-node">
+                                    <i class="fa fa-cart-shopping fa-sm px-1 pl-0"></i>
+                                    <p class="insertable">Cart</p>
+                                </a>
                                 <hr />
+                                <a href="/orders" data-node="ns" class="menu-node">
+                                    <i class="fa fa-book fa-sm px-1 pl-0"></i>
+                                    <p class="insertable">Orders</p>
+                                </a>
                                 @if (!User.Identity!.IsAuthenticated)
                                 {
                                     <a href="/authentication" data-node="ns" class="menu-node">
@@ -100,11 +124,14 @@
                                         <p class="insertable">Sign Out</p>
                                     </a>
                                 }
-                                <hr />
-                                <a href="/maintenance" data-node="ns" class="menu-node">
-                                    <i class="fa fa-server fa-xs"></i>
-                                    <p class="insertable">Maintenance</p>
-                                </a>
+                                @if (User.IsInRole("Administrator"))
+                                {
+                                    <hr />
+                                    <a href="/maintenance" data-node="ns" class="menu-node">
+                                        <i class="fa fa-server fa-xs"></i>
+                                        <p class="insertable">Maintenance</p>
+                                    </a>
+                                }
                             </div>
                         </div>
                     </div>

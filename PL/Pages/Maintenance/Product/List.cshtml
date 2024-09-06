@@ -9,7 +9,7 @@
 
 @using DSL.Adapters.Maintenance.Category
 
-<div class="container px-5 my-5">
+<div class="container px-4 my-5">
     <div class="row ai-center">
         <div class="col-0">
             <i class="fa fa-info-circle fa-2xl clr-g mx-3"></i>
@@ -43,24 +43,11 @@
     }
 </div>
 
-@if (!categorySelected)
-{
-    <div class="container px-5 my-5">
-        <div class="row">
-            <div class="col my-3 ta-center">
-                <h3>
-                    Use selection menu below to load all products, attached to selected category
-                </h3>
-            </div>
-        </div>
-    </div>
-}
-
 @if (categorySelected)
 {
     @if (Model.Products.Count != 0)
     {
-        <div class="container px-5 my-5">
+        <div class="container px-4 my-5">
             @foreach (var product in Model.Products)
             {
                 <div class="row card my-5 ai-center">
@@ -118,8 +105,20 @@
         </div>
     }
 }
+else
+{
+    <div class="container px-4 my-5">
+        <div class="row">
+            <div class="col my-3 ta-center">
+                <h3>
+                    Use selection menu below to load all products, attached to selected category
+                </h3>
+            </div>
+        </div>
+    </div>
+}
 
-<div class="container px-5 my-5">
+<div class="container px-4 my-5">
     <div class="row jc-center">
         <div class="col-0 my-1 mx-3 menu" data-component="menu">
             <button type="button" class="button">

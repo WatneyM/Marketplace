@@ -34,11 +34,13 @@ namespace PL.Pages.Authentication
                 return Redirect(ReturnUrl);
             }
             else return RedirectToPage("/Authentication/Authentication",
-                new { ReturnUrl = ReturnUrl });
+                new { ReturnUrl });
         }
 
         public IActionResult OnGetSignOut()
         {
+            Response.Cookies.Delete(".AspNetCore.Session");
+
             _service.SignOutAsync();
 
             return Redirect("/authentication");
@@ -64,7 +66,7 @@ namespace PL.Pages.Authentication
                 return Redirect(ReturnUrl);
             }
             else return RedirectToPage("/Authentication/Authentication",
-                new { ReturnUrl = ReturnUrl });
+                new { ReturnUrl });
         }
     }
 }

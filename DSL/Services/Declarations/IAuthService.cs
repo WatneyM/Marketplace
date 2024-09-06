@@ -10,6 +10,8 @@ namespace DSL.Services.Declarations
             string url, string message);
         public Task<bool> EndPasswordRecoveryAsync(PasswordResetAdapter resetData);
 
+        public Task<string> GetFullname(string username);
+
         public AuthenticationProperties GetXAuthProps(string provider,
             string returnUrl);
 

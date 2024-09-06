@@ -27,6 +27,9 @@ namespace DSL.Services.Implementations
         private readonly Mapper _modelToRA = new(new MapperConfiguration(cfg
             => cfg.CreateMap<ProductModel, ProductRAdapter>()));
 
+        private readonly Mapper _mapper = new(new MapperConfiguration(cfg
+            => cfg.CreateMap<ProductModel, ShortOrderAdapter>()));
+
         public bool KeyCheck(string key) => _manager.Has(key);
 
         public int GetCount()
@@ -43,6 +46,12 @@ namespace DSL.Services.Implementations
         {
             return _modelToRWA
                 .Map<ProductRWAdapter>(_manager.Read(productKey));
+        }
+
+        public ProductRAdapter GetProductInfo(string productKey)
+        {
+            return _modelToRA
+                .Map<ProductRAdapter>(_manager.Read(productKey));
         }
 
         public ProductRAdapter GetProductOfCategory(string categoryKey)
@@ -62,6 +71,16 @@ namespace DSL.Services.Implementations
             return _modelToRA
                 .Map<IEnumerable<ProductRAdapter>>(_manager
                 .ReadAll());
+        }
+
+        public IEnumerable<ShortOrderAdapter> GetProducts(IEnumerable<string> keys)
+        {
+            return _mapper.Map<IEnumerable<ShortOrderAdapter>>(_manager.Read(keys));
+        }
+
+        public IEnumerable<KeyValuePair<string, string>> GetProductNames(IEnumerable<string?> keys)
+        {
+            return _manager.ReadProductNames(keys!);
         }
 
         public bool PushOrModifyProduct(ProductRWAdapter adapter)

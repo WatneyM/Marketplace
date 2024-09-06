@@ -1,0 +1,121 @@
+﻿@page
+@model PL.Pages.Maintenance.SupplyModel
+@{
+    bool categorySelected = Request.RouteValues["key"] != null;
+
+    ViewData["PageTitle"] = "Product Supply Screening";
+    Layout = "_Maintenance";
+}
+
+@using DSL.Adapters.Maintenance.Category
+
+<div class="container px-4 my-5">
+    <div class="row ai-center">
+        <div class="col-0">
+            <i class="fa fa-info-circle fa-2xl clr-g mx-3"></i>
+        </div>
+
+        <div class="col my-3">
+            <h3>
+                Watch and control product amount in Storage from here.
+            </h3>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col my-3 ta-end">
+            <p>
+                <strong>@Model.SupplyList.Count</strong> active @(Model.SupplyList.Count == 1 ? "product" : "products"), registered in Storage
+            </p>
+        </div>
+    </div>
+</div>
+
+@if (categorySelected)
+{
+    @if (Model.SupplyList.Count != 0)
+    {
+        <div class="container px-4 my-5">
+            <form method="post" id="viewer">
+                @for (int idx = 0; idx < Model.SupplyList.Count; idx++)
+                {
+                    <div class="row card p-3 my-3 ai-center">
+                        <div class="col ta-center">
+                            <p>@Model.SupplyList[idx].AttachedProduct</p>
+                        </div>
+                        <div class="col my-3">
+                            <div class="field m-0">
+                                <input type="password" class="secret" value="@Model.SupplyList[idx].Key"
+                                asp-for="@Model.SupplyList[idx].Key" />
+                                <input type="text" class="input" asp-for="@Model.SupplyList[idx].Amount" />
+                            </div>
+                        </div>
+                        <div class="col ta-center">
+                            @if (Model.SupplyList[idx].Amount > 10)
+                            {
+                                <p class="clr-g">Available</p>
+                            }
+                            else if (Model.SupplyList[idx].Amount <= 10 && Model.SupplyList[idx].Amount > 0)
+                            {
+                                <p class="clr-o">Running Out</p>
+                            }
+                            else if (Model.SupplyList[idx].Amount == 0)
+                            {
+                                <p class="clr-r">Out of Storage</p>
+                            }
+                        </div>
+                    </div>
+                }
+            </form>
+        </div>
+    }
+    else
+    {
+        <div class="container px-5 my-5">
+            <div class="row my-3">
+                <div class="col ta-center">
+                    <p>No products located in Storage</p>
+                </div>
+            </div>
+        </div>
+    }
+}
+else
+{
+    <div class="container px-4 my-5">
+        <div class="row">
+            <div class="col my-3 ta-center">
+                <h3>
+                    Use selection menu below to load all products, attached to selected category
+                </h3>
+            </div>
+        </div>
+    </div>
+}
+
+<div class="container px-4 my-5">
+    <div class="row jc-center">
+        <div class="col-0 my-1 mx-3 menu" data-component="menu">
+            <button type="button" class="button">
+                <p class="insertable">Choose category</p>
+                <i class="fa fa-angle-down fa-sm"></i>
+            </button>
+            <div class="menu-list">
+                @foreach (CategoryRAdapter category in Model.Categories)
+                {
+                    <a href="/maintenance/supply/@category.Key"
+                       data-node="ns" class="menu-node">@category.Category</a>
+                }
+            </div>
+        </div>
+        @if (categorySelected)
+        {
+            <div class="col-0 my-1 mx-3">
+                <button class="button" form="viewer" asp-route-key="@Request.RouteValues["key"]"
+                        asp-page-handler="UpdateSupplyList">
+                    Update
+                </button>
+            </div>
+        }
+    </div>
+</div>

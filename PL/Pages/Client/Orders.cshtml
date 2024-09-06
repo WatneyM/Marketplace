@@ -1,0 +1,151 @@
+﻿@page
+@model PL.Pages.Client.OrdersModel
+@{
+    ViewData["PgTitle"] = "Your Orders";
+    Layout = "_Marketplace";
+}
+
+@using DAL.Enums
+
+<div class="container px-4 my-5">
+    <div class="row ai-center">
+        <div class="col-0">
+            <i class="fa fa-info-circle fa-2xl clr-g mx-3"></i>
+        </div>
+
+        <div class="col my-3">
+            <h3>
+                Here all active orders you have made. Watch ordering status here.
+            </h3>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col my-3 ta-end">
+            <p>
+                <strong>@Model.Products.Count</strong> active @(Model.Products.Count == 1 ? "order" : "orders")
+            </p>
+        </div>
+    </div>
+</div>
+
+<div class="container px-4 my-5">
+    @if (Model.Products.Count > 0)
+    {
+        @for (int idx = 0; idx < Model.Orders.Count; idx++)
+        {
+            <div class="card p-4">
+                <div class="row">
+                    <div class="col">
+                        <p class="clr-b">@Model.Orders[idx].OrderNo</p>
+                    </div>
+                    <div class="col ta-end">
+                        <p class="clr-b">@Model.Orders[idx].WhenOrdered</p>
+                    </div>
+                </div>
+                <hr />
+                <div class="row my-3 ai-center">
+                    <div class="col min-sm">
+                        <div class="row g-3">
+                            <div class="col">
+                                <h3>Product</h3>
+                            </div>
+                            <div class="col">
+                                <p>@Model.Products[idx].Product</p>
+                            </div>
+                        </div>
+
+                        <div class="row g-3">
+                            <div class="col">
+                                <h3>Price</h3>
+                            </div>
+                            <div class="col">
+                                <p>@Model.Products[idx].Price</p>
+                            </div>
+                        </div>
+
+                        <div class="row g-3">
+                            <div class="col">
+                                <h3>Ordered Amount</h3>
+                            </div>
+                            <div class="col">
+                                <p>@Model.Orders[idx].Amount</p>
+                            </div>
+                        </div>
+
+                        <div class="my-3">
+                            <div class="row g-3">
+                                <div class="col">
+                                    <h3>Holder</h3>
+                                </div>
+                                <div class="col">
+                                    <p>@ViewData["Holder"]</p>
+                                </div>
+                            </div>
+
+                            <div class="row g-3">
+                                <div class="col">
+                                    <h3>Shippment address</h3>
+                                </div>
+                                <div class="col">
+                                    <p>@Model.Orders[idx].Address</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="row jc-center my-3 g-3">
+                            <div class="col-0">
+                                <a class="button" href="/product/@Model.Products[idx].Key">View Product</a>
+                            </div>
+                            <div class="col-0">
+                                <form method="post">
+                                    <input type="password" class="secret" value="@Model.Orders[idx].Key" name="key" />
+                                    <button type="submit" class="button warning"
+                                            asp-page-handler="Decline">
+                                        Cancel Order
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <div class="row my-3 g-3">
+                            <div class="col ta-end">
+                                <h3>Order Completion Status: </h3>
+                            </div>
+                            <div class="col">
+                                @switch (Model.Orders[idx].Status)
+                                {
+                                    case OrderProcessingState.Registered:
+                                        <p>Order generated successfully and waiting for review</p>
+                                        break;
+                                    case OrderProcessingState.Accepted:
+                                        <p>The order has been processed and is waiting for transfer to the postal operator</p>
+                                        break;
+                                    case OrderProcessingState.Sent:
+                                        <p>The order has been transferred to the postal operator and is in way to destination address</p>
+                                        break;
+                                    case OrderProcessingState.Delivered:
+                                        <p>The package has delivered to destination and waiting for receiving</p>
+                                        break;
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        
+    }
+    <div class="row">
+        <div class="col ta-center">
+            <p>No active orders</p>
+        </div>
+    </div>
+</div>

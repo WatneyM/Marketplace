@@ -134,6 +134,15 @@ namespace DSL.Services.Implementations
             return true;
         }
 
+        public async Task<string> GetFullname(string username)
+        {
+            ApplicationUser? user = await _userManager.FindByNameAsync(username);
+
+            if (user is null) return string.Empty;
+
+            return string.Join(" ", user.Firstname, user.Lastname);
+        }
+
         public AuthenticationProperties GetXAuthProps(string provider,
             string returnUrl) => _signInManager
             .ConfigureExternalAuthenticationProperties(provider, returnUrl);
