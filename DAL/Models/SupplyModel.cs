@@ -15,7 +15,8 @@ namespace DAL.Models
         public string? OfCategory { get; set; }
 
         [Column("Attached Product", Order = 4)]
+        public string AttachedProduct { get; set; } = string.Empty;
         [ForeignKey("AttachedProduct")]
-        public string? AttachedProduct { get; set; }
+        public ProductModel? ProductNav { get; set; }
     }
 }

@@ -145,11 +145,54 @@ namespace BLL.Managers.Implementations
                 .AsEnumerable();
         }
 
+        public IEnumerable<ProductModel> ReadProductsOfCategoryWithFilter(string categoryKey,
+            IEnumerable<IEnumerable<string>> filter)
+        {
+            IEnumerable<ProductModel> filtered = [.. _set.AsNoTracking()
+                .Include(s => s.AttachedValues)
+                .Where(p => p.AttachedToCategory == categoryKey)];
+            List<ProductModel> result = [];
+
+            foreach (var item in filtered)
+            {
+                bool flag = false;
+
+                foreach (var outerIdx in filter)
+                {
+                    flag = false;
+
+                    foreach (var innerIdx in outerIdx)
+                    {
+                        if (item.AttachedValues.Any(p => p.Value == innerIdx))
+                        {
+                            flag = true;
+                        }
+                    }
+
+                    if (!flag) break;
+                }
+
+                if (flag) result.Add(item);
+            }
+
+            return result;
+        }
+
         public IEnumerable<KeyValuePair<string, string>> ReadProductNames(IEnumerable<string> keys)
         {
             return _set.AsNoTracking()
                 .Where(p => keys.Any(a => a == p.Key))
                 .Select(s => new KeyValuePair<string, string>(s.Key, s.Product))
+                .AsEnumerable();
+        }
+
+        public IEnumerable<string> ReadAttributeKeys(string categoryKey)
+        {
+            return _set.AsNoTracking()
+                .Include(s => s.AttachedValues)
+                .Where(p => p.AttachedToCategory == categoryKey)
+                .First().AttachedValues
+                .Select(s => s.AttachedToAttribute)
                 .AsEnumerable();
         }
     }

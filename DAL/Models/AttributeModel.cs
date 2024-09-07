@@ -13,14 +13,17 @@ namespace DAL.Models
         [Column("Attribute", Order = 2)]
         public string Attribute { get; set; } = string.Empty;
 
-        [Column("Attached To Group")]
+        [Column("Allow Filtering", Order = 3)]
+        public bool UseAsFilter { get; set; }
+
+        [Column("Attached To Group", Order = 4)]
         public string AttachedToGroup { get; set; } = string.Empty;
         [ForeignKey("AttachedToGroup")]
         public AttributeGroupModel? GroupNav { get; set; }
 
-        [Column("Created At", Order = 4)]
+        [Column("Created At", Order = 5)]
         public DateTime CreatedAt { get; set; }
-        [Column("Modified At", Order = 5)]
+        [Column("Modified At", Order = 6)]
         public DateTime ModifiedAt { get; set; }
 
         public List<ProductAttributeModel>? AttachedValues { get; set; }

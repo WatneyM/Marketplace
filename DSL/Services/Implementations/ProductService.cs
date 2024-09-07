@@ -3,6 +3,7 @@
 using BLL.Managers.Declarations;
 
 using DAL.Models;
+
 using DSL.Adapters.Maintenance.Product;
 using DSL.Services.Declarations;
 
@@ -66,6 +67,13 @@ namespace DSL.Services.Implementations
                 .ReadProductsOfCategory(categoryKey));
         }
 
+        public IEnumerable<ProductRAdapter> GetProductsOfCategoryWithFilter(string categoryKey,
+            IEnumerable<IEnumerable<string>> filter)
+        {
+            return _modelToRA.Map<IEnumerable<ProductRAdapter>>(_manager
+                .ReadProductsOfCategoryWithFilter(categoryKey, filter));
+        }
+
         public IEnumerable<ProductRAdapter> GetProductsAsList()
         {
             return _modelToRA
@@ -94,6 +102,11 @@ namespace DSL.Services.Implementations
         {
             return _manager.Has(productKey) &&
                 _manager.Delete(_manager.Read(productKey)!);
+        }
+
+        public IEnumerable<string> GetRelatedAttributeKeys(string categoryKey)
+        {
+            return _manager.ReadAttributeKeys(categoryKey);
         }
     }
 }

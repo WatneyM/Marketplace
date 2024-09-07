@@ -63,3 +63,38 @@ input[type="file"]:focus + .img-label,
 .textarea:not(:placeholder-shown) + .label {
     color: var(--clr-blue);
 }
+
+.checkbox {
+    appearance: none;
+    background: var(--clr-dark-grey);
+    border-radius: 1rem;
+    border-style: none;
+    height: 2rem;
+    position: relative;
+    width: 4rem;
+}
+
+.checkbox::after {
+    background-color: var(--clr-white);
+    border-radius: 50%;
+    content: "";
+    height: 1.4rem;
+    left: .3rem;
+    position: absolute;
+    top: .3rem;
+    width: 1.4rem;
+}
+
+.checkbox,
+.checkbox::after {
+    transition: .25s ease-in-out;
+}
+
+.checkbox:checked {
+    background: #6e79d6;
+}
+
+.checkbox:checked::after {
+    background: var(--clr-white);
+    left: 2.3rem;
+}

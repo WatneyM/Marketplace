@@ -94,7 +94,7 @@
 .img-md {
     aspect-ratio: 1;
     height: auto;
-    object-fit: cover;
+    object-fit: contain;
     width: 100%;
     max-width: 20vw;
     max-height: 20vw;
@@ -111,7 +111,7 @@
     max-height: 10vw;
     min-width: var(--min-sm);
     min-height: var(--min-sm);
-    object-fit: cover;
+    object-fit: contain;
     width: 100%;
     padding: 2rem;
     border-radius: .5rem;

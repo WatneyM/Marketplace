@@ -53,6 +53,16 @@ namespace DSL.Services.Implementations
                 .ReadAll());
         }
 
+        public IEnumerable<KeyValuePair<string, string>> GetFilteredAttributesNames(string categoryKey)
+        {
+            return _manager.ReadFiltersNames(categoryKey);
+        }
+
+        public IEnumerable<string> GetFilteredAttributes(IEnumerable<string> keys)
+        {
+            return _manager.ReadFilters(keys);
+        }
+
         public bool PushOrModifyAttribute(AttributeRWAdapter adapter)
         {
             return _manager.Has(adapter.Key)
@@ -64,6 +74,11 @@ namespace DSL.Services.Implementations
         {
             return _manager.Has(attributeKey) &&
                 _manager.Delete(_manager.Read(attributeKey)!);
+        }
+
+        public IEnumerable<KeyValuePair<string, string>> GetFiltersValues(IEnumerable<string> keys)
+        {
+            return _manager.ReadAttributeValues(keys);
         }
     }
 }

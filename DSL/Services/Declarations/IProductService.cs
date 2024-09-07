@@ -14,6 +14,8 @@ namespace DSL.Services.Declarations
         public ProductRAdapter GetProductOfCategory(string categoryKey);
 
         public IEnumerable<ProductRAdapter> GetProductsOfCategory(string categoryKey);
+        public IEnumerable<ProductRAdapter> GetProductsOfCategoryWithFilter(string categoryKey,
+            IEnumerable<IEnumerable<string>> filter);
         public IEnumerable<ProductRAdapter> GetProductsAsList();
 
         public IEnumerable<ShortOrderAdapter> GetProducts(IEnumerable<string> keys);
@@ -21,5 +23,7 @@ namespace DSL.Services.Declarations
 
         public bool PushOrModifyProduct(ProductRWAdapter adapter);
         public bool DropProduct(string productKey);
+
+        public IEnumerable<string> GetRelatedAttributeKeys(string categoryKey);
     }
 }

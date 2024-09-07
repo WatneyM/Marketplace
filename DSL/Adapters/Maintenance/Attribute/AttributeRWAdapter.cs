@@ -8,6 +8,7 @@ namespace DSL.Adapters.Maintenance.Attribute
 
         [Required(ErrorMessage = "Required. Field must contain an attribute name")]
         public string Attribute { get; set; } = string.Empty;
+        public bool UseAsFilter { get; set; }
 
         [Required(ErrorMessage = "Required. Must be attached at least to any group")]
         public string AttachedToGroup { get; set; } = string.Empty;

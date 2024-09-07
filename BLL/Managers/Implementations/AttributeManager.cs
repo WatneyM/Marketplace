@@ -42,6 +42,24 @@ namespace BLL.Managers.Implementations
                 .AsEnumerable();
         }
 
+        public IEnumerable<KeyValuePair<string, string>> ReadFiltersNames(string categoryKey)
+        {
+            return _set.AsNoTracking()
+                .Include(p => p.GroupNav)
+                .Where(p => p.GroupNav!.AttachedToCategory == categoryKey)
+                .Where(p => p.UseAsFilter)
+                .Select(s => new KeyValuePair<string, string>(s.Key, s.Attribute))
+                .AsEnumerable();
+        }
+
+        public IEnumerable<string> ReadFilters(IEnumerable<string> keys)
+        {
+            return _set.AsNoTracking()
+                .Where(p => keys.Contains(p.Key) && p.UseAsFilter)
+                .Select(s => s.Key)
+                .AsEnumerable();
+        }
+
         public bool Create(AttributeModel model)
         {
             model.CreatedAt = DateTime.Now;
@@ -65,6 +83,7 @@ namespace BLL.Managers.Implementations
             AttributeModel original = Track(model.Key)!;
 
             original.Attribute = model.Attribute;
+            original.UseAsFilter = model.UseAsFilter;
             original.AttachedToGroup = model.AttachedToGroup;
             original.ModifiedAt = DateTime.Now;
 
@@ -93,6 +112,22 @@ namespace BLL.Managers.Implementations
             }
 
             return true;
+        }
+
+        public IEnumerable<KeyValuePair<string, string>> ReadAttributeValues(IEnumerable<string> keys)
+        {
+            List<KeyValuePair<string, string>> result = [];
+            List<ProductAttributeModel> source = [.. _context.AttributesData
+                .AsNoTracking()
+                .Where(p => keys.Contains(p.AttachedToAttribute))];
+
+            foreach (ProductAttributeModel item in source)
+            {
+                if (result.Contains(new KeyValuePair<string, string>(item.AttachedToAttribute, item.Value))) continue;
+                else result.Add(new KeyValuePair<string, string>(item.AttachedToAttribute, item.Value));
+            }
+
+            return result.AsEnumerable();
         }
     }
 }

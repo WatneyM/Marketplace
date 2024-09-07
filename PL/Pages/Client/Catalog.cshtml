@@ -1,4 +1,4 @@
-﻿@page "{key}"
+﻿@page "{key}/{filter?}"
 @model PL.Pages.Client.ListModel
 @{
     ViewData["PageTitle"] = "View Products";
@@ -16,7 +16,7 @@
         <div class="col my-3">
             <h3>
                 Here all products had found for category @Model.Category.Category<br />
-                View list for interested products, and go for details or add the products to the cart right now
+                View list for interested products, and go for details or use filters
             </h3>
         </div>
     </div>
@@ -29,6 +29,61 @@
         </div>
     </div>
 </div>
+
+@if (Model.Products.Count != 0)
+{
+    <div class="container px-4 my-5">
+        <div class="row">
+            <div class="col ta-center">
+                <h3>Filter set</h3>
+            </div>
+        </div>
+
+        <form method="post" id="filter">
+            @{
+                int idx = 0;
+
+                foreach (var item in Model.AttributeKeys)
+                {
+                    <div class="row my-3 ai-center">
+                        <div class="col">
+                            <h3>@Model.AttributeNames.Find(p => p.Key == item).Value</h3>
+                        </div>
+                        @foreach (var item2 in Model.AttributeValues.Where(p => p.Key == item))
+                        {
+                            <div class="col">
+                                <div class="row g-3 ai-center jc-center">
+                                    <div class="col-0">
+                                        <p style="text-wrap: nowrap;">@item2.Value</p>
+                                    </div>
+                                    <div class="col-0">
+                                        <input type="password" value="@item2.Value" class="secret" asp-for="@Model.FilterStorage[idx].Key" />
+                                        <input type="checkbox" class="checkbox" checked="@Model.FilterStorage[idx].Value"
+                                               asp-for="@Model.FilterStorage[idx].Value" />
+                                    </div>
+                                </div>
+                            </div>
+
+                            idx++;
+                        }
+                    </div>
+                }
+            }
+        </form>
+
+        <div class="row g-3 my-3 jc-center">
+            <div class="col-0">
+                <button class="button" form="filter"
+                        formaction="/catalog/@Model.Category.Key?handler=Filter">
+                    Filter
+                </button>
+            </div>
+            <div class="col-0">
+                <a class="button" href="/catalog/@Model.Category.Key">Clear</a>
+            </div>
+        </div>
+    </div>
+}
 
 @if (Model.Products.Count > 0)
 {

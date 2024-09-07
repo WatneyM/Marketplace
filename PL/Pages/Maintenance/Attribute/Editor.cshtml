@@ -95,6 +95,15 @@
 
                 <span asp-validation-for="Attribute.AttachedToGroup"></span>
             </div>
+
+            <div class="row ai-center mx-5 my-3">
+                <div class="col ta-end">
+                    <p>Allow Filtering For This Attribute</p>
+                </div>
+                <div class="col">
+                    <input type="checkbox" class="checkbox mx-5" asp-for="Attribute.UseAsFilter">
+                </div>
+            </div>
         </form>
     </div>
 

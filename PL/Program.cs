@@ -76,7 +76,7 @@ builder.Services.AddRazorPages().AddRazorPagesOptions(options =>
     options.Conventions
     .AddPageRoute("/Client/Categories", "categories");
     options.Conventions
-    .AddPageRoute("/Client/Catalog", "catalog/{key}");
+    .AddPageRoute("/Client/Catalog", "catalog/{key}/{filter?}");
     options.Conventions
     .AddPageRoute("/Client/Product", "product/{key?}");
 
